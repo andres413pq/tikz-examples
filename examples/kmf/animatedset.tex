@@ -1,0 +1,228 @@
+% Animated set intersection
+%
+% The animations can only be viewed in Acrobat (Reader) v >= 6.
+\documentclass{beamer}
+\usepackage{animate}
+%%%<
+\usepackage{verbatim}
+%%%>
+
+\begin{comment}
+:Title: Animated set intersection
+:Tags: Beamer, Foreach
+
+
+The `animate.sty`_ package is a useful and fun tool for creating Javascript driven animations in
+PDF files. Brian S. Marks has already contributed an impressive `animated statistical distribution`_ example that demonstrates `animate.sty`_. The following example is much simpler, but demonstrates a more general technique that is useful in conjunction with other tools as well.
+
+.. _animated statistical distribution: http://www.fauskes.net/pgftikzexamples/animated-distributions/
+
+The animation is a two step process:
+
+1. Creating the individual frames of the animation. Each frame becomes a page in a PDF file.
+2. Putting together the frames using animate.
+
+The main reason we do it this way is because animate does not allow a ``\newframe`` *inside* PGF's ``\foreach`` command. This means that we can't put a ``\foreach`` loop  *around* the parameterized picture inside the ``animateinline`` environment (we can use a ``\foreach`` for other purposes though).
+
+**Update**: `A standalone version`_ of the example is now available that uses ``\whiledo`` to parameterize the picture. 
+
+Step 1. Creating the frames
+---------------------------
+
+The animation we will make demonstrates the set intersection operation. The code for drawing the sets is based on the `venn diagram`_ example. A ``foreach`` loop is used to draw a total of 21 frames, varying the x-coordinate of set B. The preview.sty_ package is used to crop every tikzpicture and put each picture/frame on a separate page.
+
+.. _venn diagram: http://www.fauskes.net/pgftikzexamples/venn-diagram/
+.. _preview.sty: http://www.ctan.org/tex-archive/help/Catalogue/entries/preview.html
+
+`setanim.tex`_ (setanim.pdf_) source:
+
+.. _setanim.tex: animations/setanim.tex
+.. _setanim.pdf: animations/setanim.pdf
+
+.. sourcecode:: latex
+
+    % Animate a set intersection operation.
+    % The target document is a beamer presentation, so we load the
+    % beamer class to get the same fonts as in the presentation.
+    \documentclass{beamer}
+    \usepackage{tikz}
+
+    \usepackage[active,tightpage]{preview}
+    \PreviewEnvironment{tikzpicture}
+
+    \begin{document}
+    % define the bounding box
+    \def\boundb{(-2,2) rectangle (4,-2)}
+    % Create n frames with \xb as parameter
+    \foreach \xb in {0,0.1,...,2.1}{
+        \def\setA{(0,0) circle (1)}
+        \def\setB{(\xb,0) circle (1)}
+
+        \begin{tikzpicture}
+            \draw \boundb;
+            % intersection
+            \begin{scope}
+                \clip \setA;
+                \fill[black!20] \setB;
+            \end{scope}
+            \begin{scope}[even odd rule]% first circle without the second
+                \clip \setB \boundb;
+                \fill[red!20] \setA;
+            \end{scope}
+            \begin{scope}[even odd rule]% first circle without the second
+                \clip \setA \boundb;
+                \fill[blue!20] \setB;
+            \end{scope}
+            \draw \setA;
+            \draw \setB;
+            \node at (-1,0) [left] {$A$};
+            \node at (\xb+1,0) [right] {$B$};
+            \node at (4,2) [below left] {$A\cap B$};
+        \end{tikzpicture}
+    }
+    \end{document}
+
+
+The output from the above code is a the PDF setanim.pdf_ where each page contains a frame of the animation.
+
+Step 2. Putting together the frames
+-----------------------------------
+
+The next step is to put the frames together and create an animation. There are different ways you can do this, but I will only demonstrate the `animate.sty`_ package. Some alternatives are:
+
+- Convert the pages in the PDF to bitmaps and put them together using video creation tools like ffmpeg_, Blender_ and many others.
+- Use SWFTools_' pdf2swf_ tool to create a Flash animation.
+
+.. _ffmpeg: http://ffmpeg.mplayerhq.hu/
+.. _Blender: http://www.blender.org/
+.. _SWFTools: http://www.swftools.org/about.html
+.. _pdf2swf: http://www.swftools.org/pdf2swf.html
+
+
+The animate package provides the command ``\animatedgraphics`` for creating animations based on a sequence of files or a multi-page PDF:
+
+.. sourcecode:: latex
+
+    \animategraphics[<options>]{<frame rate>}{<file basename>}{<first>}{<last>}
+
+See the documentation_ for an explanation of the available options and parameters. Here is the code for including the the frames:
+
+.. sourcecode:: latex
+
+    \documentclass{beamer}
+
+    \usepackage{animate}
+    \begin{document}
+
+    \begin{frame}
+        \frametitle{Set intersection}
+        \begin{center}
+            % Set frame rate to 12 frames/sec. Load frames from setanim.pdf.
+            % We will use all frames, so there is no need to specify a start
+            % and end frame.
+            \animategraphics[autoplay,palindrome]{12}{animations/setanim}{}{}
+        \end{center}
+    \end{frame}
+
+    \end{document}
+
+.. _documentation: http://www.ctan.org/get/macros/latex/contrib/animate/doc/animate.pdf
+
+Download the PDF to see the animation in action.
+
+:Source: The latex-beamer-users_ mailing list
+
+.. _latex-beamer-users: http://www.nabble.com/Re%3A--animate.sty--simple-example-p15390560.html
+
+.. note:: Acrobat Reader v >= 6.0 is required to view this example.
+
+.. _animate.sty: http://www.ctan.org/tex-archive/help/Catalogue/entries/animate.html
+.. _animate: http://www.ctan.org/tex-archive/help/Catalogue/entries/animate.html
+
+A standalone version
+--------------------
+
+The author of the animate_ package, Alexander Grahn, has contributed a version of the above example that does not require splitting the frames and the viewer in separate files:
+
+- Source: `animated-set-standalone.tex`_
+- Output: `animated-set-standalone.pdf`_
+
+.. _animated-set-standalone.tex: animations/animated-set-standalone.tex
+.. _animated-set-standalone.pdf: animations/animated-set-standalone.pdf
+
+.. sourcecode:: latex
+
+    \documentclass{beamer}
+    \usepackage{tikz}
+    \usepackage{animate}
+
+    \usepackage{fp}
+
+    % parameterized tikz graphics
+    \newcommand{\intersect}[1]{%
+    \def\setA{(0,0) circle (1)}%
+    \def\setB{(#1,0) circle (1)}%
+    % define the bounding box
+    \def\boundb{(-2,2) rectangle (4,-2)}%
+    %
+    \begin{tikzpicture}
+        \draw \boundb;
+        % intersection
+        \begin{scope}
+        \clip \setA;
+        \fill[black!20] \setB;
+        \end{scope}
+        \begin{scope}[even odd rule]% first circle without the second
+        \clip \setB \boundb;
+        \fill[red!20] \setA;
+        \end{scope}
+        \begin{scope}[even odd rule]% first circle without the second
+        \clip \setA \boundb;
+        \fill[blue!20] \setB;
+        \end{scope}
+        \draw \setA;
+        \draw \setB;
+        \node at (-1,0) [left] {$A$};
+        \node at (#1+1,0) [right] {$B$};
+        \node at (4,2) [below left] {$A\cap B$};
+    \end{tikzpicture}
+    }
+
+    \begin{document}
+
+    \begin{frame}
+    \frametitle{Set intersection}
+    \begin{center}
+
+        \begin{animateinline}[autoplay,palindrome]{12}
+        %first frame, xb=0.0
+        \gdef\xb{0}% xb initial value
+        \intersect{\xb}%
+        %remaining frames, xb=0.1...2.1
+        \whiledo{\lengthtest{\xb pt < 2.1pt}}{%
+            \newframe
+            \FPeval{xb}{\xb+0.1}% new xb
+            \xdef\xb{\xb}% make \xb global
+            \intersect{\xb}%
+        }%
+        \end{animateinline}
+
+    \end{center}
+    \end{frame}
+    \end{document}
+
+
+\end{comment}
+
+\begin{document}
+
+\begin{frame}
+    \frametitle{Set intersection}
+    \begin{center}
+        % Set frame rate to 12 frames/sec. Load frames from setanim.pdf.
+        % We will use all frames, so there is no need to specify a start
+        % and end frame.
+        \animategraphics[autoplay,palindrome]{12}{animations/setanim}{}{}
+    \end{center}
+\end{frame}
+\end{document}
