@@ -17,3 +17,5 @@ syntax: glob
 *.idx
 *.ind
 *.nlo
+*.synctex.gz
+
