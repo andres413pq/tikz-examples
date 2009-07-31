@@ -1,11 +1,13 @@
 % Author: Nick Papior Andersen
-% A decoration of a path which evolves with time.
+%%%<
+% A decoration of a path which evolves with time. 
 % Settings is there such that you can change the
 % start amplitude, end amplitude and the wave length.
 % Furthermore you decide whether it should start as a cosine or sine wave.
+% The input of the items is also enabled as lists. Thus it regulates it self along the path.
 %
 % Of course the start size and end size can be switched which gives a decreasing wave.
-
+%%%>
 
 \documentclass{article}
 \usepackage{tikz}
@@ -19,9 +21,12 @@
 \begin{comment}
 :Title: Growing wave decoration
 
-A path decoration that evolves with time. Options are available for setting
-start amplitude, end amplitude and the wave length. Furthermore you an set whether it should 
-start as a cosine or sine wave. The start size and end size can be switched which gives a decreasing wave.
+A decoration of a path which evolves with time. 
+Options are available for changing the
+start amplitude, end amplitude and the wave length.
+Furthermore you decide whether it should start as a cosine or sine wave.
+The input of the items is also enabled as lists. Thus it regulates it self along the path.
+The start size and end size can be switched which gives a decreasing wave.
 
 \end{comment}
 
@@ -146,10 +151,10 @@ start as a cosine or sine wave. The start size and end size can be switched whic
         }%
         \pgfmathparse{int(\pgfdecorationliststeps+1)}%
         \global\edef\pgfdecorationliststeps{\pgfmathresult}%
-        \global\edef\pgfdecorationgrowthsteps{0}		%	Redefine the steps counter, globally.
+        \global\edef\pgfdecorationgrowthsteps{0}% Redefine the steps counter, globally.
         \pgfmathparse{(\pgfdecorationgrowthendsize-\pgfdecorationgrowthstart) * 2 %
                 * \pgfdecorationgrowthwavelength / (\pgfdecoratedpathlength * (\pgfdecorationgrowthendstep -\tempa))}%
-        \global\edef\pgfdecorationgrowth{\pgfmathresult}%		
+        \global\edef\pgfdecorationgrowth{\pgfmathresult}%
     \fi%
 }
 
@@ -157,33 +162,33 @@ start as a cosine or sine wave. The start size and end size can be switched whic
 
 \begin{tikzpicture}
     \draw[decorate,decoration={growth wave,
-            growth start size=2pt,
-            growth end size=.5cm,
-            growth wave length=5pt,
-            growth cosine}] (0,0) -- (3,0);
+        growth start size=2pt,
+        growth end size=.5cm,
+        growth wave length=5pt,
+        growth cosine}] (0,0) -- (3,0);
     \draw[decorate,decoration={growth wave,
-            growth start size=0pt,
-            growth end size=.5cm,
-            growth wave length=2pt,
-            growth cosine},fill,color=red] (0,-1) rectangle (4,-4);
+        growth start size=0pt,
+        growth end size=.5cm,
+        growth wave length=2pt,
+        growth cosine},fill,color=red] (0,-1) rectangle (4,-4);
     \foreach \start/\end/\xstep/\ystep in {0/-10/5/-5,5/-5/10/-10,10/-10/5/-15,5/-15/0/-10} {
         \draw[fill,color=red,decorate,decoration={growth wave, % Choose the decoration
-                growth start size=1pt,				% Sets the start amplitude of the wave
-                growth end size={1cm,3cm,1cm,1pt},	% Sets the end amplitude of the wave
-                growth end steps={0.25,.5,.75,1},	% Sets the percentual path positions where the transitions
-                                                    % should be made
-                growth wave length={1pt,3pt,3pt,1pt},	% Sets the wave lengths
-                growth sine}] 					% The wave starts as a sine
-                    (\start,\end) -- (\xstep,\ystep);
-    
+            growth start size=1pt,               % Sets the start amplitude of the wave
+            growth end size={1cm,3cm,1cm,1pt},   % Sets the end amplitude of the wave
+            growth end steps={0.25,.5,.75,1},    % Sets the percentual path positions where the transitions
+                                                 % should be made
+            growth wave length={1pt,3pt,3pt,1pt},% Sets the wave lengths
+            growth sine}]                        % The wave starts as a sine
+                (\start,\end) -- (\xstep,\ystep);
+
         \draw[fill,color=blue,decorate,decoration={growth wave, % Choose the decoration
-                growth start size=1pt,							% Sets the start amplitude of the wave
-                growth end size={1cm,3cm,1cm,1pt},			    % Sets the end amplitudes of the wave
-                growth end steps={0.25,.5,.75,1},				% Sets the percentual path positions where the transitions 
-                                                                % should be made
-                growth wave length={1pt,3pt,3pt,1pt},		    % Sets the wave lengths
-                growth cosine}] 								% The wave starts as a cosine
-                    (\start,\end) -- (\xstep,\ystep);
+            growth start size=1pt,              % Sets the start amplitude of the wave
+            growth end size={1cm,3cm,1cm,1pt},  % Sets the end amplitudes of the wave
+            growth end steps={0.25,.5,.75,1},   % Sets the percentual path positions where the transitions 
+                                                % should be made
+            growth wave length={1pt,3pt,3pt,1pt},% Sets the wave lengths
+            growth cosine}]                     % The wave starts as a cosine
+                (\start,\end) -- (\xstep,\ystep);
     }
     \draw[xshift=5cm, decorate,decoration={growth wave,
         growth start size=1cm,
