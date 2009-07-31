@@ -3,10 +3,28 @@
 \documentclass{minimal}
 \usepackage[a4paper, landscape]{geometry}
 \usepackage{tikz}
+%%%<
+\usepackage{verbatim}
+\usepackage[active,tightpage]{preview}
+\PreviewEnvironment{tikzpicture}
+\setlength\PreviewBorder{5pt}%
+%%%>
+
+\begin{comment}
+:Title: BER measurement on fibre optical system
+:Slug: BER-measurement
+
+A schematic of bit error rate (BER) measurement on fibre optical system, involving QD SOA.
+
+In the TeXnical part, it illustrates the use of matrix to position nodes in a grid, 
+and chains to connect them. It uses some interesting tricks, such as the 
+possiblity to add [xshift] options to indvidual nodes to alter their position 
+in the grid, or the fit option to create rectangles that enclose a set of concrete nodes.
+\end{comment}
+
 \usetikzlibrary{shapes.geometric,shapes.arrows,decorations.pathmorphing}
 \usetikzlibrary{matrix,chains,scopes,positioning,arrows,fit}
-\usepackage[active, tightpage]{preview}
-\PreviewEnvironment{tikzpicture}
+
 \begin{document}
 \sffamily\begin{tikzpicture}
   % Define a macro to draw the filter symbol
