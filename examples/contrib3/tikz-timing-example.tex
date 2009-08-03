@@ -8,6 +8,33 @@
 
 \documentclass{article}
 \usepackage{tikz-timing}[2009/05/15]
+
+%%%<
+\usepackage{verbatim}
+\usepackage[active,tightpage]{preview}
+\PreviewEnvironment{tikzpicture}
+\setlength\PreviewBorder{5pt}%
+%%%>
+
+\begin{comment}
+:Title: Timing diagram with the tikz-timing package
+:Slug: tikz-timing
+
+This example shows how to make a timing diagram with the `tikz-timing package`_. 
+This timing diagram was used by the package author in a recent work and 
+shows several clock and pulse signals. The relationship between the clock and 
+signal edges is shown using horizontal lines.
+
+Timing diagrams like this can be done using the ``tikztimingtable`` 
+environment which has the same syntax as a ``tabular`` environment with two 
+columns. The first column holds the signal name, the second one the timing 
+characters. See the `package manual`_  for detailed information about them.
+
+.. _tikz-timing package: http://www.ctan.org/tex-archive/help/Catalogue/entries/tikz-timing.html
+.. _package manual: http://www.ctan.org/tex-archive/graphics/pgf/contrib/tikz-timing/tikz-timing.pdf
+
+\end{comment}
+
 \pagestyle{empty}
 \def\degr{${}^\circ$}
 
