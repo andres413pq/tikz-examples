@@ -6,10 +6,54 @@
 %packages
 %========
 \usepackage{tikz}          %tikz graphics package for drawing with pgf
-\usepackage{fp}            %for fixed point math
-\usepackage{ifthen}        %for \ifthenelse{}{}{} conditional statements
 
-\usepackage[active,tightpage]{preview} %set the document for figure preview
+%%%<
+\usepackage{verbatim}
+\usepackage[active,tightpage]{preview}
+\PreviewEnvironment{tikzpicture}
+\setlength\PreviewBorder{5pt}%
+%%%>
+
+\begin{comment}
+:Title: Polarization state of light
+
+This demonstrates the use of the `fixed point calculation package fp.sty <http://www.ctan.org/tex-archive/help/Catalogue/entries/fp.html>`_ to process user-defined parameters while rendering a TikZ
+picture.  In this example, a ellipse is rendered, representing the
+polarization state of light for an arbitrary x-amplitude y-amplitude,
+and relative phase.  See `<http://en.wikipedia.org/wiki/Polarization>`_ for
+background information on polarization states of light.
+
+In this example, a relatively simple command is called from within a
+tikzpicture environment:
+
+.. sourcecode:: latex
+
+	\begin{tikzpicture}
+	    %usage:  \polellipse{ E_{0x} }{ E_{0y} }{ phase }
+	    \polellipse{3}{2}{45}
+	\end{tikzpicture}
+
+The contents of the ``\polellipse`` command is rather lengthy, but can be
+broken down into two main parts.  The first part performs the
+necessary math to convert the user-defined parameters ``E_{0x}``,
+``E_{0y}``, and ``phase`` into values which are useful to the drawing
+process.  The second part uses the calculated numbers to draw a
+coordinate axis, the ellipse, and appropriate annotation.
+
+This example can be helpful when preparing a document describing
+various polarization states of light.  The document can contain an
+arbitrary number of ``\polellipse`` commands, each with an arbitrary
+configuration of parameters.  Each rendered figure is based on the
+same code, so a desired change to the style can update all figures.
+
+This general technique can be applied to any TikZ figure, where the
+document calls any number of commands with some passed parameters, and
+some computation is be performed to render the diagrams.
+
+\end{comment}
+
+\usepackage{fp}            %for fixed point math
+\usepackage{ifthen}      %for \ifthenelse{}{}{} conditional statements
 
 %===================
 %Style configuration
