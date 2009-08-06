@@ -1,16 +1,20 @@
+% System Combination
+% Harish K Krishnamurthy <www.ece.neu.edu/~hkashyap/>
 \documentclass{article}
 
 \usepackage{tikz}
 \usetikzlibrary{shapes,arrows,shadows}
 \usepackage{amsmath,bm,times}
+%%%<
 \usepackage{verbatim}
+\usepackage[active,tightpage]{preview}
+\PreviewEnvironment{tikzpicture}
+\setlength\PreviewBorder{5pt}%
+%%%>
 
 \begin{comment}
 :Title: System Combination
-:Tags: Block diagrams, speech recognition, Layers
 :Author: Harish K Krishnamurthy
-:Home: www.ece.neu.edu/~hkashyap/
-
 
 A block diagram of system combination technique of combining several Automatic Speech Recognition Systems (ASRs) to determine best word sequence outputs is shown here. The training and validation phase are the important phases.
 
@@ -91,47 +95,46 @@ A block diagram of system combination technique of combining several Automatic S
     \path (wa.south) +(0,-\blockdist) node (sct) {System Combination - Training};
  
 
-\path (syscomb.east)+(1.0,0.0) node (bwtn) {};
+    \path (syscomb.east)+(1.0,0.0) node (bwtn) {};
 
-% Note how the single nodes are repeated using for loop
-\foreach \x in {0,1,...,4} 
-{ 
-\draw (bwtn.east)+(\x,0) node (asr\x-2)[]{}; 
-\fill (bwtn.east)+(\x,0) circle (0.1cm); 
-}
-       
-       \path [draw, ->] (syscomb.east) -- node [above] {} 
-       (bwtn.east);
-
-       
+    % Note how the single nodes are repeated using for loop
+    \foreach \x in {0,1,...,4} 
+    { 
+        \draw (bwtn.east)+(\x,0) node (asr\x-2)[]{}; 
+        \fill (bwtn.east)+(\x,0) circle (0.1cm); 
+    }
+   
+    \path [draw, ->] (syscomb.east) -- node [above] {} 
+        (bwtn.east);
 	\path [draw, ->] (asr0-2) -- node [above] {@} 
-       (asr1-2);
-           \path [draw, -] (asr1-2) -- node [above] {b} 
-       (asr2-2);
-           \path [draw, -] (asr2-2) -- node [above] {z} 
-       (asr3-2);
-           \path [draw, -] (asr3-2) -- node [above] {} 
-       (asr4-2);
+        (asr1-2);
+    \path [draw, -] (asr1-2) -- node [above] {b} 
+        (asr2-2);
+    \path [draw, -] (asr2-2) -- node [above] {z} 
+        (asr3-2);
+    \path [draw, -] (asr3-2) -- node [above] {} 
+        (asr4-2);
 
     \path [draw, ->] (asr0-2) edge[bend  right]  node [below] {@} 
-       (asr1-2);
-           \path [draw, ->] (asr1-2) edge[bend  right]  node [below] {b} 
-       (asr2-2);
-           \path [draw, ->] (asr2-2) edge[bend  right]  node [below] {c} 
-       (asr3-2);
-           \path [draw, ->] (asr4-2) node[]{} (asr4-2)+(1.0,0);
+        (asr1-2);
+    \path [draw, ->] (asr1-2) edge[bend  right]  node [below] {b} 
+        (asr2-2);
+    \path [draw, ->] (asr2-2) edge[bend  right]  node [below] {c} 
+        (asr3-2);
+    \path [draw, ->] (asr4-2) node[]{} (asr4-2)+(1.0,0);
 
+    \begin{scope}[looseness=1.6]
+        \path [draw, ->] (asr0-2) edge[bend  right=90]  node [below] {a} 
+            (asr1-2);
+        \path [draw, ->] (asr1-2) edge[bend  right=90]  node [below] {b} 
+            (asr2-2);
+        \path [draw, ->] (asr2-2) edge[bend  right=90]  node [below] {c} 
+            (asr3-2);
+    \end{scope}
+    \path (asr3-2.east)+(1.5,0.0) node (bw)[sensor] {Best Word Sequence\\$\arg\max$};    
 
-    \path [draw, ->] (asr0-2) edge[bend  right=90]  node [below] {a} 
-       (asr1-2);
-           \path [draw, ->] (asr1-2) edge[bend  right=90]  node [below] {b} 
-       (asr2-2);
-           \path [draw, ->] (asr2-2) edge[bend  right=90]  node [below] {c} 
-       (asr3-2);
-       \path (asr3-2.east)+(1.5,0.0) node (bw)[sensor] {Best Word Sequence\\$\arg\max$};    
-
-           \path [draw, -] (asr1-2.east) node [below] {} 
-       (bw.west);
+    \path [draw, -] (asr1-2.east) node [below] {} 
+        (bw.west);
           
     \begin{pgfonlayer}{background}
         \path (asrt1.west)+(-0.5,1.0) node (g) {};
@@ -140,14 +143,14 @@ A block diagram of system combination technique of combining several Automatic S
         \path[fill=yellow!20,rounded corners, draw=black!50, dashed]
             (g) rectangle (h);
 
-           \path [draw, ->] (vote.south) edge[bend  left=90]  node [below] {Used in validation} 
-       (syscomb.30);            
+        \path [draw, ->] (vote.south) edge[bend  left=90]  node [below] {Used in validation} 
+            (syscomb.30);            
 
     \end{pgfonlayer}
     
-        \path (asr1-2.south) +(-\blockdist,-\blockdist) node (asrs) {System Combination - Validation};
+    \path (asr1-2.south) +(-\blockdist,-\blockdist) 
+        node (asrs) {System Combination - Validation};
 
 \end{tikzpicture}
-
 
 \end{document}
