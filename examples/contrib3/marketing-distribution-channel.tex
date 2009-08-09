@@ -1,15 +1,27 @@
-%% Author: Ashutosh Prasad
 %% Depiction of a marketing distribution channel or supply chain. 
-
-%% This type of figure, where the boxes represent channel members and arrows
-%% represent the flow of goods, is quite common in business mgmt. 
-
-%% For a discussion of advertising participation rates in channels, see, e.g., 
-%% He, Prasad & Sethi (POM 2009). 
-
+%% Author: Ashutosh Prasad
 \documentclass{article}
 \usepackage{tikz}
 \usetikzlibrary{arrows,positioning} 
+
+%%%<
+\usepackage{verbatim}
+\usepackage[active,tightpage]{preview}
+\PreviewEnvironment{tikzpicture}
+\setlength\PreviewBorder{5pt}%
+%%%>
+
+\begin{comment}
+:TItle: Marketing distribution channel
+
+Depiction of a marketing distribution channel or supply chain. 
+This type of figure, where the boxes represent channel members and arrows
+represent the flow of goods, is quite common in business management. 
+
+For a discussion of advertising participation rates in channels, see, e.g., 
+He, Prasad & Sethi (POM 2009). 
+
+\end{comment}
 
 \begin{document}
 
@@ -34,7 +46,8 @@
 % There is a slight overlap of the arrows with the (manufacturer) south edge
 % because creating the offset in another way didn't compile. 
  
-\draw[<->, >=latex', shorten >=2pt, shorten <=2pt, bend right=45, thick, dashed] (retailer1.south) to node[auto, swap] {Competition}(retailer2.south); 
+\draw[<->, >=latex', shorten >=2pt, shorten <=2pt, bend right=45, thick, dashed] 
+    (retailer1.south) to node[auto, swap] {Competition}(retailer2.south); 
 % The swap command corrects the placement of the text.
 
 \end{tikzpicture} 
