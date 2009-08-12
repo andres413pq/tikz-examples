@@ -1,0 +1,64 @@
+% Author: Florian Hollandt
+\documentclass{article}
+
+\usepackage{tikz}
+\usetikzlibrary{shapes}
+
+\setlength\oddsidemargin{0in}
+
+
+\begin{document}
+
+\ttfamily
+\footnotesize
+
+\pagestyle{empty}
+
+
+\def\n{6}
+\def\d{2}
+
+\tikzstyle{every picture}=[execute at end picture={
+\foreach \x in {1,...,\n}{
+        \path (360*\x/\n:\d)
+		node [info carrier] (I\x) {$I_{\x}$};
+	\draw [I to I] (I\x.200+360*\x/\n) arc (140:360:\d/6) arc (0:50:\d/6);
+        \path (360*\x/\n:2*\d) 
+		node [enzyme] (E\x) {$E_{\x}$};
+	\draw  
+		(I\x) to[I to E] (E\x);
+	\draw 
+		(360*\x/\n-360/\n:2*\d) to[E to I] (I\x.center);
+};
+}]
+
+
+\paragraph{Plain}
+
+\begin{center}
+\tikzstyle{every node}=[node distance=\d cm,font=\tiny]
+\tikzstyle{info carrier}=[inner sep=2pt]
+\tikzstyle{enzyme}=[]
+\tikzstyle{every path}=[->,shorten >=2pt,shorten <=2pt]
+\tikzstyle{I to E}=[shorten >=2pt,shorten <=2pt]
+\tikzstyle{E to I}=[densely dotted,shorten >=7mm,shorten <=4mm]
+\tikzstyle{I to I}=[->,rotate=360*\x/\n]
+\begin{tikzpicture}
+\end{tikzpicture}
+\end{center}
+
+\paragraph{Fancy}
+
+\begin{center}
+\tikzstyle{every node}=[node distance=\d cm,font=\tiny]
+\tikzstyle{info carrier}=[shape=rectangle,draw=black,rounded corners=0.5,shading=radial,outer color=orange,inner color=white]
+\tikzstyle{enzyme}=[inner sep=2pt,shape=ellipse,draw=black,rounded corners=0.5,ball color=green]
+\tikzstyle{every path}=[->,shorten >=2pt,shorten <=2pt,thick]
+\tikzstyle{I to E}=[controls=(10+360*\x/\n:\d*4/3) and (-10+360*\x/\n:\d*5/3),shorten >=2pt,shorten <=2pt,in=360*\x/\n+225]
+\tikzstyle{E to I}=[controls=(360*\x/\n-360/\n+30:\d*5/3) and (360*\x/\n-360/\n-00:\d*4/3),densely dotted,shorten >=7mm,shorten <=4mm]
+\tikzstyle{I to I}=[->,shorten >=4pt,shorten <=2pt,rotate=360*\x/\n]
+\begin{tikzpicture}
+\end{tikzpicture}
+\end{center}
+
+\end{document}
