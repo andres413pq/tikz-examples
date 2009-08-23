@@ -18,4 +18,5 @@ syntax: glob
 *.ind
 *.nlo
 *.synctex.gz
-
+*.orig
+incoming/*
