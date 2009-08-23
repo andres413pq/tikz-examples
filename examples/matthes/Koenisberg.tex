@@ -1,3 +1,4 @@
+% The seven bridges of Königsberg
 % Author : Alain Matthes
 % Encoding : UTF8
 % Engine : PDFLaTeX
@@ -6,11 +7,23 @@
 \usepackage{fullpage}
 \usepackage{fourier}
 \usepackage{tikz}
+%%%<
+\usepackage{verbatim}
+\usepackage[active,tightpage]{preview}
+\PreviewEnvironment{tikzpicture}
+\setlength\PreviewBorder{5pt}%
+%%%>
+
+\begin{comment}
+:Title: The seven bridges of Königsberg
+:Slug: bridges-of-konigsberg
+
+The Seven Bridges of Königsberg is a famous historical problem in mathematics. Its negative resolution by Leonhard Euler in 1735 laid the foundations of graph theory and presaged the idea of topology.
+\end{comment}
+
 \usetikzlibrary{arrows,%
                 shapes,positioning}
-                \usepackage[active,tightpage]{preview}
-                \PreviewEnvironment{tikzpicture}
-                \setlength\PreviewBorder{5pt}%
+                
 \thispagestyle{empty}
 \begin{document}
   
