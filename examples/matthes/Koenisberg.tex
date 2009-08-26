@@ -50,14 +50,15 @@ The Seven Bridges of Königsberg is a famous historical problem in mathematics. 
      \node[VertexStyle,right=of A](B){B};
      \node[VertexStyle,right=of B](C){C};
      \node[VertexStyle,above= 8 cm of B](D){D};     
-     \draw[EdgeStyle](B) to node[pos=.5,draw,fill=yellow]{1} (D) ;
+     \draw[EdgeStyle](B) to node[LabelStyle]{1} (D) ;
      \tikzset{EdgeStyle/.append style = {bend left}}
-     \draw[EdgeStyle](A) to node[pos=.5,draw,fill=yellow]{2} (B);
-     \draw[EdgeStyle](B) to node[pos=.5,draw,fill=yellow]{3} (A);
-     \draw[EdgeStyle](B) to node[pos=.5,draw,fill=yellow]{4} (C);
-     \draw[EdgeStyle](C) to node[pos=.5,draw,fill=yellow]{5} (B);
-     \draw[EdgeStyle](A) to node[pos=.5,draw,fill=yellow]{6} (D);
-     \draw[EdgeStyle](D) to node[pos=.5,draw,fill=yellow]{7} (C);
+     \draw[EdgeStyle](A) to node[LabelStyle]{2} (B);
+     \draw[EdgeStyle](B) to node[LabelStyle]{3} (A);
+     \draw[EdgeStyle](B) to node[LabelStyle]{4} (C);
+     \draw[EdgeStyle](C) to node[LabelStyle]{5} (B);
+     \draw[EdgeStyle](A) to node[LabelStyle]{6} (D);
+     \draw[EdgeStyle](D) to node[LabelStyle]{7} (C);
+
   \end{tikzpicture}
 \end{center}
 \end{document}
