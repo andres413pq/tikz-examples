@@ -7,15 +7,28 @@
 \usepackage{fullpage}
 \usepackage{fourier}
 \usepackage{tikz}
+%%%<
+\usepackage{verbatim}
+\usepackage[active,tightpage]{preview}
+\PreviewEnvironment{tikzpicture}
+\setlength\PreviewBorder{5pt}%
+%%%>
+
+\begin{comment}
+:Title: Annotated 3D box
+
+In the current version of PGF  there is a small, undocumented library for 3D drawings. This example shows how you can use it to draw simple, but effective 3D-illustrations. 
+
+\end{comment}
 \usetikzlibrary{calc,3d}
 
 \begin{document}
 \thispagestyle{empty} 
 
 \begin{center}
-\begin{tikzpicture}[x     = {(-0.5cm,-0.5cm)},
-                    y     = {(0.9659cm,-0.25882cm)},
-                    z     = {(0cm,1cm)},
+\begin{tikzpicture}[x  = {(-0.5cm,-0.5cm)},
+                    y  = {(0.9659cm,-0.25882cm)},
+                    z  = {(0cm,1cm)},
                     scale = 2,
                     color = {lightgray}]
 % style of faces
