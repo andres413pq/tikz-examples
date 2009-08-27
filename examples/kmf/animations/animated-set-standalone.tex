@@ -1,0 +1,60 @@
+% Animate a set intersection operation. 
+% Standalone version contributed by Alexander Grahn
+\documentclass{beamer}
+\usepackage{tikz}
+\usepackage{animate}
+
+\usepackage{fp}
+
+% parameterized tikz graphics
+\newcommand{\intersect}[1]{%
+  \def\setA{(0,0) circle (1)}%
+  \def\setB{(#1,0) circle (1)}%
+  % define the bounding box
+  \def\boundb{(-2,2) rectangle (4,-2)}%
+  %
+  \begin{tikzpicture}
+    \draw \boundb;
+    % intersection
+    \begin{scope}
+      \clip \setA;
+      \fill[black!20] \setB;
+    \end{scope}
+    \begin{scope}[even odd rule]% first circle without the second
+      \clip \setB \boundb;
+      \fill[red!20] \setA;
+    \end{scope}
+    \begin{scope}[even odd rule]% first circle without the second
+      \clip \setA \boundb;
+      \fill[blue!20] \setB;
+    \end{scope}
+    \draw \setA;
+    \draw \setB;
+    \node at (-1,0) [left] {$A$};
+    \node at (#1+1,0) [right] {$B$};
+    \node at (4,2) [below left] {$A\cap B$};
+  \end{tikzpicture}
+}
+
+\begin{document}
+
+\begin{frame}
+  \frametitle{Set intersection}
+  \begin{center}
+
+    \begin{animateinline}[autoplay,palindrome]{12}
+      %first frame, xb=0.0
+      \gdef\xb{0}% xb initial value
+      \intersect{\xb}%
+      %remaining frames, xb=0.1...2.1
+      \whiledo{\lengthtest{\xb pt < 2.1pt}}{%
+    	\newframe
+    	\FPeval{xb}{\xb+0.1}% new xb
+		\xdef\xb{\xb}% make \xb global
+    	\intersect{\xb}%
+      }%
+    \end{animateinline}
+
+  \end{center}
+\end{frame}
+\end{document}
