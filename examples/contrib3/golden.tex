@@ -1,14 +1,29 @@
+% Logarithmic spiral
+% Author: Andrew Mertz
 \documentclass{minimal}
 \usepackage{tikz}
 \usetikzlibrary{backgrounds,calc}
-\usepackage[graphics,tightpage,active]{preview}
-\setlength{\PreviewBorder}{0pt}
+
+%%%<
+\usepackage{verbatim}
+\usepackage[active,tightpage]{preview}
 \PreviewEnvironment{tikzpicture}
+\setlength\PreviewBorder{0pt}%
+%%%>
+
+\begin{comment}
+:Title: Logarithmic spiral
+
+A `logarithmic spiral`_.
+
+.. _logarithmic spiral: http://en.wikipedia.org/wiki/Logarithmic_spiral
+
+\end{comment}
+
 \begin{document}
 \begin{tikzpicture}[background rectangle/.style={fill=black},
-                    show background rectangle,x=1pt,y=1pt]
-
-  % Compute the golden ratio
+                    show background rectangle, x=1pt, y=1pt]
+ % Compute the golden ratio
   \pgfmathsetmacro{\goldenRatio}{(1+sqrt(5)) / 2}
 
   % Compute the angle between the tangent and radial line 
@@ -20,7 +35,7 @@
   % last line segment and the end of the plot. Having a large sample
   % size reduces the gap.
   \draw[very thick,white,domain=\offset:\offset+14*pi/2,
-       smooth,samples=6000,variable=\t] plot
+       smooth,samples=600,variable=\t] plot
    ({pow(\goldenRatio, 2 * \t / pi) * cos(\t r)},
     {pow(\goldenRatio, 2 * \t / pi) * sin(\t r)}) 
    coordinate(end);
