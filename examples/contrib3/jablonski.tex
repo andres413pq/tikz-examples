@@ -1,24 +1,30 @@
 % The Perrin - Jablonski diagram
 % Germain Salvato-Vallverdu - mai 2009
-% germain_vallverdu@yahoo.fr
 % http://germain.salvato-vallverdu.perso.sfr.fr
 
-% % % technical area
-% chemistry
-% physics
-
-% % % short description
-% The Perrin - Jablonski diagram is convenient for
-% visualizing in a simple way, all possible photophysical processes
-% in molecular system.
 
 \documentclass[11pt,a4paper]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[francais]{babel}
-\usepackage[top=3cm,left=2cm,right=2cm,bottom=3cm]{geometry}
+\usepackage[top=3cm,left=0cm,right=0cm,bottom=3cm]{geometry}
 
 \usepackage{tikz}
+%%%<
+\usepackage{verbatim}
+\usepackage[active,tightpage]{preview}
+\setlength\PreviewBorder{5pt}%
+%%%>
+
+\begin{comment}
+:Title: The Perrin - Jablonski diagram
+
+The Perrin - Jablonski diagram is convenient for
+visualizing in a simple way, all possible photophysical processes
+in molecular system.
+
+\end{comment}
+
 % shadows only for title
 \usetikzlibrary{decorations.pathmorphing,shadows} 
 
@@ -48,6 +54,7 @@ pdfproducer={PDFLaTeX},%
 \definecolor{orange}{rgb}{0.8 0.4 0.2}
 \definecolor{bleu}{rgb}{0.39, 0.58, 0.93}
 
+\begin{preview}
 \begin{center}
 
 \begin{tikzpicture}
@@ -130,7 +137,6 @@ pdfproducer={PDFLaTeX},%
 \end{tikzpicture}
 
 \end{center}
-
 \vspace{1cm}
 
 \begin{tikzpicture}
@@ -152,5 +158,5 @@ pdfproducer={PDFLaTeX},%
 		decorate,decoration=snake] (0,0) -- (1,0) node[above,pos=0.5,text=orange] {RV};} 
 		Vibrationnal Relaxation.
 \end{itemize}
-
+\end{preview}
 \end{document}
