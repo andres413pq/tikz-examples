@@ -1,18 +1,6 @@
-% bootstrap resampling
+% Bootstrap resampling
 % Germain Salvato-Vallverdu - mai 2009
-% germain_vallverdu@yahoo.fr
 % http://germain.salvato-vallverdu.perso.sfr.fr
-
-% % % technical area
-% statistics
-% mathematics
-
-% % % short description
-% Bootstrap technics is a resampling of a limited length sample
-% without any new data. This method allows us to get new
-% informations on statistical uncertaintes due to limited
-% length sample. 
-
 \documentclass[11pt,a4paper,landscape]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -20,6 +8,22 @@
 \usepackage[top=3cm,left=2cm,right=2cm,bottom=3cm]{geometry}
 
 \usepackage{tikz}
+%%%<
+\usepackage{verbatim}
+\usepackage[active,tightpage]{preview}
+\setlength\PreviewBorder{5pt}%
+%%%>
+
+\begin{comment}
+:Title:  Bootstrap resampling
+
+Bootstrap technics is a resampling of a limited length sample
+without any new data. This method allows us to get new
+informations on statistical uncertaintes due to limited
+length sample.
+ 
+\end{comment}
+
 \usetikzlibrary{shadows} 
 
 \usepackage{hyperref}
@@ -39,6 +43,7 @@ pdfproducer={PDFLaTeX},%
 \begin{document}
 \sffamily
 
+\begin{preview}
 \begin{center}
 
 \begin{tikzpicture}[scale=1.4]
@@ -310,5 +315,5 @@ pdfproducer={PDFLaTeX},%
 \end{tikzpicture}
 
 \end{center}
-
+\end{preview}
 \end{document}
