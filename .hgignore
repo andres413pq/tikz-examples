@@ -20,3 +20,6 @@ syntax: glob
 *.synctex.gz
 *.orig
 incoming/*
+*.table
+*.gnuplot
+
