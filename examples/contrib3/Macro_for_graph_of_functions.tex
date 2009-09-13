@@ -1,7 +1,20 @@
-\documentclass{minimal}
 % under Creative Commons attribution license.
 % A work by Yves Delhaye
+% Requires GNUPLOT and shell-escape enabled
+\documentclass{minimal}
+
 \usepackage{tikz}
+%%%<
+\usepackage{verbatim}
+\usepackage[active,tightpage]{preview}
+\setlength\PreviewBorder{0pt}%
+%%%>
+
+\begin{comment}
+:Title: Parameterized plots
+
+As a math teacher, I have to explain how parameters affect the graph of a function. By putting the "tikzpicture" inside a LaTeX macro, it is very easy and fast to create multiple graphs by modifying only the parameters and calling the macro.
+\end{comment}
 \usetikzlibrary{arrows,shapes}
 \usepackage{xifthen}
 
@@ -30,7 +43,7 @@
    \draw[very thin,color=gray] (-0.1,\minY) grid (7.9,\maxY);% GRID use minY & maxY
     \draw[->] (-0.2,0) -- (8.2,0) node[right] {$x$};
     \draw[->] (0,\minY) -- (0,\maxY) node[above] {$f(x)$};% y axis use minY & maxY too
-    \draw[smooth,samples=200,color=blue] plot[id=sinexp] function{(\cA)* (cos((\cC)*x+(\cD))) + \cB} 
+    \draw[smooth,samples=200,color=blue] plot function{(\cA)* (cos((\cC)*x+(\cD))) + \cB} 
         node[right] {$f(x) = \cA{} . cos(\cC{} . x + \cD{}) + \cB{}$};
 % units for cartesian reference frame
     \foreach \x in {0,1}
@@ -41,6 +54,7 @@
 \end{tikzpicture}
 }
 % END of macro
+\begin{preview}
 % And now use it!
     \FctAss{}
     
@@ -75,6 +89,7 @@
     \renewcommand{\cD}{2}
     
     \FctAss{}
+\end{preview}
 %   UNCOMMENT IF YOU WANT TO SEE MORE
 % % This is where the test on maxY is useful.
 %     \renewcommand{\cA}{3}
