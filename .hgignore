@@ -22,4 +22,5 @@ syntax: glob
 incoming/*
 *.table
 *.gnuplot
+Thumbs.db
 

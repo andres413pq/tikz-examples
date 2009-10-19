@@ -1,0 +1,79 @@
+% Oxidation and reduction
+% Author: Arne Röhrs
+% Note that two compilations are necessary. 
+\documentclass{article}
+\usepackage{tikz}
+\usepackage[version=3,arrows=pgf]{mhchem}
+
+%%%<
+\usepackage{verbatim}
+\usepackage[active,tightpage]{preview}
+\setlength\PreviewBorder{5pt}%
+%%%>
+
+\begin{comment}
+:Title: Oxidation and reduction
+:Tags: Remember picture, Overlays
+
+Example of how to add TikZ arrows to chemical reactions made with the `mhchem package`_.
+TikZ coordinate nodes are put in the reaction equations and later used as reference points
+for drawing using TikZ's ``remember picture`` feature. 
+
+
+.. _mhchem package: http://www.ctan.org/tex-archive/help/Catalogue/entries/mhchem.html
+\end{comment}
+
+\begin{document}
+
+% Insert a named coordinate for later reference.
+% Usage:
+% \ncoord{name}
+% \ncoord[1em,2em]{name}
+\newcommand\ncoord[2][0,0]{%
+    \tikz[remember picture,overlay]{\path (#1) coordinate (#2);}%
+}
+
+% Define a handful of special cases of \ncoord
+\newcommand\ccoord[1]{\ncoord[0.5em,0.9em]{#1}}%
+\newcommand\bcoord[1]{\ncoord[0.4em,-0.3em]{#1}}%
+\newcommand\dcoord[1]{\ncoord[0.9em,1.5em]{#1}}%
+\newcommand\ecoord[1]{\ncoord[0.9em,-0.3em]{#1}}%
+
+\tikzset{
+    oxidation/.style={thick,red!80!black},
+    reduction/.style={thick,blue!80!black},
+}
+
+\begin{preview}
+~
+
+% First reaction
+\[
+\ce{{\ccoord{a}} Na + {\bcoord{c}} Cl -> {\ccoord{b}} Na+  + {\bcoord{d}} Cl-}
+\]
+\tikz[overlay,remember picture] {
+    \draw[oxidation,->] (a) -- ++(0,0.7em) -| (b)
+        node[above, near start] {Oxidation};
+    \draw[reduction,->] (c) -- ++(0,-0.7em) -| (d)
+        node[below, near start] {Reduktion};
+}
+\\[0.5cm] % add some extra vertical spacing
+
+% Second reaction
+\[
+    \ce{%
+    {\dcoord{a}} $\overset{\text{0}}{\text{2\,Na}}$
+    +{\ecoord{c}}$\overset{\text{0}}{\text{Cl$_2$}}$ ->
+    {\dcoord{b}} $\overset{\text{+I}}{\text{2\,Na$^+$}}$  +
+    {\ecoord{d}} $\overset{\text{-I}}{\text{2\,Cl$^-$}}$}
+\]
+\tikz[overlay,remember picture] {
+    \draw[oxidation,->] (a) -- ++(0,0.7em) -| (b)
+        node[above, near start] {Oxidation};
+    \draw[reduction,->] (c) -- ++(0,-0.7em) -| (d)
+        node[below, near start] {Reduktion};
+}
+
+\end{preview}
+
+\end{document} 
