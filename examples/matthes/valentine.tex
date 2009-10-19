@@ -1,0 +1,35 @@
+% Valentine heart
+% Author: Alain Matthes
+\documentclass{article}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{tikz}
+
+
+%%%<
+\usepackage{verbatim}
+\usepackage[active,tightpage]{preview}
+\PreviewEnvironment{tikzpicture}
+\setlength\PreviewBorder{5pt}%
+%%%>
+
+\begin{comment}
+:Title: Valentine heart
+:Tags: Paths
+
+Use PGF and TikZ to create a Valentine card.
+
+:Author: `Alain Matthes`_
+
+.. _Alain Matthes: http://altermundus.fr/index.html
+
+\end{comment}
+
+
+\begin{document}
+\begin{tikzpicture}
+    \draw[ball color=BrickRed,shading=ball] (4,1) ..controls +(120:2cm)
+        and +(90:2cm) .. (0,0) .. controls  +(-90:2cm) and +(90:3cm) ..
+        (4,-8) .. controls +(90:3cm) and +(-90:2cm) ..(8,0)  .. controls
+        +(90:2cm) and  +(60:2cm) .. (4,1);
+\end{tikzpicture}
+\end{document}
