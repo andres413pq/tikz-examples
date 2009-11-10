@@ -1,0 +1,340 @@
+%% 3dplot.sty
+%% Copyright 2009 Jeffrey D. Hein
+%
+% This work may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either version 1.3
+% of this license or (at your option) any later version.
+% The latest version of this license is in
+%   http://www.latex-project.org/lppl.txt
+% and version 1.3 or later is part of all distributions of LaTeX
+% version 2005/12/01 or later.
+%
+% This work has the LPPL maintenance status `maintained'.
+% 
+% The Current Maintainer of this work is Jeffrey D. Hein.
+%
+% This work consists of the files 3dplot.sty and 3dplot.tex
+
+%Description
+%-----------
+
+%3dplot.sty - package for plotting three dimensional axes and coordinates in TikZ.  The user can specify orientation of the display, and also define rotated coordinate systems within the 3d display coordinate system.  
+
+%Created 2009-11-07 by Jeff Hein.  Last updated: 2009-11-09
+%----------------------------------------------------------
+
+%Requirements
+%------------
+%This requires the tikz package.
+
+%Update Notes
+%------------
+
+%2009-11-07: Created package from previous scratch work
+
+%TODO list
+%---------
+
+%TODO: figure out how to work in a variable scope that doesn't interfere with other packages
+%TODO: find a way to check if TikZ is loaded, and give a compile error if necessary
+%TODO: find a way to use predefined coordinates in rotated or translated coordinate frames, instead of just literal coordinates
+%TODO: generalize matrix math if such a package exists
+%TODO: look into using TikZ spherical polar coordinates explicitly to streamline coordinate definitions.
+
+%Style definitions and includes
+%------------------------------
+\usetikzlibrary{calc,3d}
+
+%Commands
+%--------
+
+%\tdplotsinandcos{sin}{cos}{theta}
+%determines the sin and cos of the specified angle (in degrees).
+%#1: returns sin(#3)
+%#2: returns cos(#3)
+%#3: user-specified angle
+\newcommand{\tdplotsinandcos}[3]{%
+\pgfmathsetmacro{#1}{sin(#3)}%
+\pgfmathsetmacro{#2}{cos(#3)}%
+}
+
+%\tdplotmult{result}{multiplicand}{multiplicator}
+%determines the multiplication of specified values.
+%#1: returns #2*#3
+%#2: user-specified multiplicand
+%#3: user-specified multiplicator
+\newcommand{\tdplotmult}[3]{%
+\pgfmathsetmacro{#1}{#2*#3}%
+}
+
+%\tdplotdiv{result}{dividend}{divisor}
+%determines the division of specified values.
+%#1: returns #2/#3
+%TODO: handle divide by zero?
+%#2: user-specified dividend
+%#3: user-specified divisor
+\newcommand{\tdplotdiv}[3]{%
+\pgfmathsetmacro{#1}{#2/#3}%
+}
+
+%\tdplotsetdisplay{\theta_d}{\phi_d}
+%generates the coordinate transformation for defining a TikZ 3d plot display coordinates.
+%#1: user-specified \theta_d, defining the angle through which the system is rotated about the x-axis.  0 points the z-axis "out of the page", while 90 points the z-axis vertically upward on the page.
+%#2: user-specified \phi_d, defining the angle through which the system is rotated about the z-axis.  0 points the x-axis to the right.
+\newcommand{\tdplotsetmaincoords}[2]{%
+%perform some trig for the display transformation
+%TODO: choose less obvious macro names?  or look into scoping?
+\tdplotsinandcos{\sintheta}{\costheta}{#1}%
+\tdplotsinandcos{\sinphi}{\cosphi}{#2}%
+%
+\tdplotmult{\stsp}{\sintheta}{\sinphi}%
+\tdplotmult{\stcp}{\sintheta}{\cosphi}%
+\tdplotmult{\ctsp}{\costheta}{\sinphi}%
+\tdplotmult{\ctcp}{\costheta}{\cosphi}%
+%
+%determine rotation matrix elements for display transformation
+\pgfmathsetmacro{\raarot}{\cosphi}%
+\pgfmathsetmacro{\rabrot}{\sinphi}%
+%NOTE: \rac is zero for this rotation, where z^c always points vertical on the page
+\pgfmathsetmacro{\racrot}{0}%
+\pgfmathsetmacro{\rbarot}{-\ctsp}%
+\pgfmathsetmacro{\rbbrot}{\ctcp}%
+\pgfmathsetmacro{\rbcrot}{\sintheta}%
+%NOTE: third row of rotation matrix not needed for display since screen z is always flat on the page.  It is, however, needed when performing further transformations using the Euler transformation.
+\pgfmathsetmacro{\rcarot}{\stsp}%
+\pgfmathsetmacro{\rcbrot}{-\stcp}%
+\pgfmathsetmacro{\rccrot}{\costheta}%
+%
+%now here is where the output is performed
+\tikzset{tdplot_main_coords/.style={x={(\raarot cm,\rbarot cm)},y={(\rabrot cm, \rbbrot cm)},z={(\racrot cm, \rbcrot cm)}}}%
+}
+
+
+%\tdplotsetrotatedcoords{\alpha}{\beta}{\gamma}
+%generates the coordinate transformation for the rotated coordinate system within the display coordinate system.  This should be called only after the display coordinate system has been defined.  If the display coordinate system changes, this will have to be updated.
+%#1: user-specified euler angle \alpha.
+%#2: user-specified euler angle \beta.
+%#3: user-specified euler angle \gamma.
+\newcommand{\tdplotsetrotatedcoords}[3]{%
+%
+\pgfmathsetmacro{\alphaeul}{#1}
+\pgfmathsetmacro{\betaeul}{#2}
+\pgfmathsetmacro{\gammaeul}{#3}
+%
+%perform some trig for the Euler transformation
+\tdplotsinandcos{\sinalpha}{\cosalpha}{\alphaeul} 
+\tdplotsinandcos{\sinbeta}{\cosbeta}{\betaeul}
+\tdplotsinandcos{\singamma}{\cosgamma}{\gammaeul}
+%
+\tdplotmult{\sasb}{\sinalpha}{\sinbeta}
+\tdplotmult{\sbsg}{\sinbeta}{\singamma}
+\tdplotmult{\sasg}{\sinalpha}{\singamma}
+\tdplotmult{\sasbsg}{\sasb}{\singamma}
+%
+\tdplotmult{\sacb}{\sinalpha}{\cosbeta}
+\tdplotmult{\sacg}{\sinalpha}{\cosgamma}
+\tdplotmult{\sbcg}{\sinbeta}{\cosgamma}
+\tdplotmult{\sacbsg}{\sacb}{\singamma}
+\tdplotmult{\sacbcg}{\sacb}{\cosgamma}
+%
+\tdplotmult{\casb}{\cosalpha}{\sinbeta}
+\tdplotmult{\cacb}{\cosalpha}{\cosbeta}
+\tdplotmult{\cacg}{\cosalpha}{\cosgamma}
+\tdplotmult{\casg}{\cosalpha}{\singamma}
+%
+\tdplotmult{\cacbsg}{\cacb}{\singamma}
+\tdplotmult{\cacbcg}{\cacb}{\cosgamma}
+%
+%determine rotation matrix elements for Euler transformation
+\pgfmathsetmacro{\raaeul}{\cacbcg - \sasg}
+\pgfmathsetmacro{\rabeul}{-\cacbsg - \sacg}
+\pgfmathsetmacro{\raceul}{\casb}
+\pgfmathsetmacro{\rbaeul}{\sacbcg + \casg}
+\pgfmathsetmacro{\rbbeul}{-\sacbsg + \cacg}
+\pgfmathsetmacro{\rbceul}{\sasb}
+\pgfmathsetmacro{\rcaeul}{-\sbcg}
+\pgfmathsetmacro{\rcbeul}{\sbsg}
+\pgfmathsetmacro{\rcceul}{\cosbeta}
+%
+%DEBUG: display euler matrix elements
+%\raaeul\ \rabeul\ \raceul
+%
+%\rbaeul\ \rbbeul\ \rbceul
+%
+%\rcaeul\ \rcbeul\ \rcceul
+%
+%now, determine master rotation matrix to define euler-rotated coordinates within the display coordinate frame
+\tdplotmult{\raaeaa}{\raarot}{\raaeul}
+\tdplotmult{\rabeba}{\rabrot}{\rbaeul}
+\tdplotmult{\raceca}{\racrot}{\rcaeul}
+%
+\tdplotmult{\raaeab}{\raarot}{\rabeul}
+\tdplotmult{\rabebb}{\rabrot}{\rbbeul}
+\tdplotmult{\racecb}{\racrot}{\rcbeul}
+%
+\tdplotmult{\raaeac}{\raarot}{\raceul}
+\tdplotmult{\rabebc}{\rabrot}{\rbceul}
+\tdplotmult{\racecc}{\racrot}{\rcceul}
+%
+\tdplotmult{\rbaeaa}{\rbarot}{\raaeul}
+\tdplotmult{\rbbeba}{\rbbrot}{\rbaeul}
+\tdplotmult{\rbceca}{\rbcrot}{\rcaeul}
+%
+\tdplotmult{\rbaeab}{\rbarot}{\rabeul}
+\tdplotmult{\rbbebb}{\rbbrot}{\rbbeul}
+\tdplotmult{\rbcecb}{\rbcrot}{\rcbeul}
+%
+\tdplotmult{\rbaeac}{\rbarot}{\raceul}
+\tdplotmult{\rbbebc}{\rbbrot}{\rbceul}
+\tdplotmult{\rbcecc}{\rbcrot}{\rcceul}
+%
+%the third row is not needed for screen display
+%\tdplotmult{\rcaeaa}{\rcarot}{\raaeul}
+%\tdplotmult{\rcbeba}{\rcbrot}{\rbaeul}
+%\tdplotmult{\rcceca}{\rccrot}{\rcaeul}
+%
+%\tdplotmult{\rcaeab}{\rcarot}{\rabeul}
+%\tdplotmult{\rcbebb}{\rcbrot}{\rbbeul}
+%\tdplotmult{\rccecb}{\rccrot}{\rcbeul}
+%
+%\tdplotmult{\rcaeac}{\rcarot}{\raceul}
+%\tdplotmult{\rcbebc}{\rcbrot}{\rbceul}
+%\tdplotmult{\rccecc}{\rccrot}{\rcceul}
+%
+%set up the master rotation matrix elements
+\pgfmathsetmacro{\raarc}{\raaeaa + \rabeba + \raceca}
+\pgfmathsetmacro{\rabrc}{\raaeab + \rabebb + \racecb}
+\pgfmathsetmacro{\racrc}{\raaeac + \rabebc + \racecc}
+\pgfmathsetmacro{\rbarc}{\rbaeaa + \rbbeba + \rbceca}
+\pgfmathsetmacro{\rbbrc}{\rbaeab + \rbbebb + \rbcecb}
+\pgfmathsetmacro{\rbcrc}{\rbaeac + \rbbebc + \rbcecc}
+%the third row is not needed for screen display
+%\pgfmathsetmacro{\rcarc}{\rcaeaa + \rcbeba + \rcceca}
+%\pgfmathsetmacro{\rcbrc}{\rcaeab + \rcbebb + \rccecb}
+%\pgfmathsetmacro{\rccrc}{\rcaeac + \rcbebc + \rccecc}
+%
+%DEBUG: display master matrix elements
+%\raarc\ \rabrc\ \racrc
+%
+%\rbarc\ \rbbrc\ \rbcrc
+%
+%\rcarc\ \rcbrc\ \rccrc
+%
+\tikzset{tdplot_rotated_coords/.append style={x={(\raarc cm,\rbarc cm)},y={(\rabrc cm, \rbbrc cm)},z={(\racrc cm, \rbcrc cm)}}}%
+}
+
+%\tdplotsetrotatedcoordsorigin{point}
+%this translates the rotated coordinate system to the specified point.
+%#1: user-specified coordinate
+\newcommand{\tdplotsetrotatedcoordsorigin}[1]{%
+%\pgfmathsetmacro{\tdplotrotatedcoordsorigin}{#1}%
+\tikzset{tdplot_rotated_coords/.append style={shift=#1}}%
+}
+
+%\tdplotresetrotatedcoordsorigin
+%this resets the rotated coordinate system translation back to the origin of the main coordinate system
+\newcommand{\tdplotresetrotatedcoordsorigin}{%
+%\pgfmathsetmacro{\tdplotrotatedcoordsorigin}{#1}%
+\tikzset{tdplot_rotated_coords/.append style={shift={(0,0,0)}}}%
+}
+
+%\tdplotsetthetaplanecoords{\phi}
+%this places the rotated coordinate system such that it's x'-y' plane coincides with a "theta plane" for the main coordinate system:  This plane contains the z axis, and lies at angle \phi from the x axis.
+%#1: user-specified \phi angle from x-axis
+\newcommand{\tdplotsetthetaplanecoords}[1]{%
+%
+	\tdplotresetrotatedcoordsorigin
+	\tdplotsetrotatedcoords{270 + #1}{270}{0}%
+}
+%note: the following rotation permutes the x, y, and z axes in forward progression.  Any value of \alpha greater than 270 will rotate the axes further, allowing for easy selection of the ``theta plane''.
+%\tdplotsetrotatedcoords{270}{270}{00}
+
+%note: the following rotation permutes the x,y, and z axes in backward progression.
+%\tdplotsetrotatedcoords{0}{90}{90}
+
+%\tdplotsetrotatedthetaplanecoords{\phi'}
+%this places the rotated coordinate system into the "theta plane" for the current rotated coordinate system, at user-specified angle \phi'.  Note that it replaces the current rotated coordinate system
+%#1: user-specified \phi' angle from x'-axis
+\newcommand{\tdplotsetrotatedthetaplanecoords}[1]{%
+	\tdplotsetrotatedcoords{\alphaeul}{\betaeul}{\gammaeul + #1}%
+	%
+	%permute the coordinates
+	\tikzset{tdplot_rotated_coords/.append style={y={(\raarc cm,\rbarc cm)},z={(\rabrc cm, \rbbrc cm)},x={(\racrc cm, \rbcrc cm)}}}%
+}
+
+%\tdplotsetcoord{point}{r}{theta}{phi}
+%sets a 3d point using spherical polar coordinates.  This also generates xy, xz, and yz projections of this point using appropriately named points
+%#1: name of point to set
+%#2: user-specified r coordinate
+%#3: user-specified \theta coordinate
+%#4: user-specified \phi coordinate
+\newcommand{\tdplotsetcoord}[4]{%
+%
+%do some trig to determine angular part of coordinate
+\tdplotsinandcos{\sinthetavec}{\costhetavec}{#3}%
+\tdplotsinandcos{\sinphivec}{\cosphivec}{#4}%
+\tdplotmult{\stcpv}{\sinthetavec}{\cosphivec}%
+\tdplotmult{\stspv}{\sinthetavec}{\sinphivec}%
+%
+%assign the point
+\coordinate (#1) at ($#2*(\stcpv,\stspv,\costhetavec)$);
+%assign the xy, xz, and yz projections of the point
+\coordinate (#1xy) at ($#2*(\stcpv,\stspv,0)$);
+\coordinate (#1xz) at ($#2*(\stcpv,0,\costhetavec)$);
+\coordinate (#1yz) at ($#2*(0,\stspv,\costhetavec)$);
+%assign the x, y, and z projections of the point
+\coordinate (#1x) at ($#2*(\stcpv,0,0)$);
+\coordinate (#1y) at ($#2*(0,\stspv,0)$);
+\coordinate (#1z) at ($#2*(0,0,\costhetavec)$);
+}
+
+
+%\tdplotdrawarc[coordinate system, draw styles]{center}{r}{angle start}{angle end}{label options}{label}
+%draws an arc and puts a label in the center with specified node options
+%#1: Optional, specifies the coordinate system and any draw style
+%#2: center point of arc
+%#3: radius of arc
+%#4: start angle
+%#5: end angle
+%#6: label options
+%#7: label
+%	\tdplotdrawarc{(O)}{0.2}{0}{\phivec}{anchor=north}{$\phi$}
+\newcommand{\tdplotdrawarc}[7][tdplot_main_coords]{%
+\pgfmathsetmacro{\tdplottemp}{#5 + #4}
+\tdplotdiv{\tdplottemp}{\tdplottemp}{2}
+\draw[#1] #2 + (\tdplottemp:#3) node[#6]{#7};
+\draw[#1] #2 + (#4:#3) arc (#4:#5:#3);
+}
+
+%Notes
+%-----
+
+%PROBLEM:
+%the line-by-line coordinate transformation does not accept predefined points.  It only works with literal points.  Example:
+%\begin{tikzpicture}[smooth]
+%	\draw plot coordinates{(1,0)(2,0.5)(3,0)(3,1)};
+%	\draw[x={(0cm,1cm)},y={(1cm,0cm)},color=red] plot coordinates{(1,0)(2,0.5)(3,0)(3,1)};
+%\end{tikzpicture}
+%
+%\begin{tikzpicture}[smooth]
+%	\coordinate (A) at (1,0);
+%	\coordinate (B) at (2,0.5);
+%	\coordinate (C) at (3,0);
+%	\coordinate (D) at (3,1);
+%	\draw plot coordinates{(A)(B)(C)(D)};
+%	\draw[x={(0cm,1cm)},y={(1cm,0cm)},color=red] plot coordinates{(A)(B)(C)(D)};
+%\end{tikzpicture}
+%SOLUTION: none so far, other than use literal points.
+
+
+%PROBLEM:
+%	\node[tdplot_rotated_coords,anchor=south west] at (\thetavec/2:.5){$\theta$};
+%it looks like the \node command can't be placed properly when a shift={} is defined in a style?
+%SOLUTION:  Use something like this instead:
+%\draw[tdplot_rotated_coords] (O) + (\thetavec/2:.5) node[anchor=south west]{$\theta$};
+
+
+%PROBLEM:
+	%\draw[-stealth,color=orange] (0,0,0) -- (xyz spherical cs:radius=.5,longitude=60,latitude=120);
+%this gives the compile error:  Undefined control sequence. <argument> \tikz@cs@radius.  Not sure if this is due to some missing code in the TikZ 3d library.
+%SOLUTION: none found yet.
