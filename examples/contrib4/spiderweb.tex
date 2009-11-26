@@ -3,6 +3,25 @@
 % Author: Dominik Renzel
 % Date; 2009-11-11
 \documentclass{article}
+%%%<
+\usepackage{verbatim}
+\usepackage[active,tightpage,floats]{preview}
+\setlength\PreviewBorder{5pt}%
+%%%>
+
+\begin{comment}
+:Title: Spiderweb diagram
+
+Such a diagram defines a set of dimensions D = {D1,...,Dn} and a common scale unit 
+range from 0 to a maximal value U. Each individual sample contains a sequence of 
+pairs (Dx,Vx) with 0 <= Vx <= U for all Dx in D.
+  
+The diagram is rendered as a spiderweb, where the D dimension axes meet each 
+other in the origin in an angle of 360/D and are each divided in U units. Each 
+sample is rendered as half-opaque colored path along the particular value unit nodes 
+on each dimension. Overlapping parts will be rendered in a composite color.
+
+\end{comment}
 
 \usepackage{tikz}
 \usetikzlibrary{shapes}
@@ -36,7 +55,7 @@
       \fill (D\X-\Y) circle (1pt);
     }
     \draw [opacity=0.3] (0:\Y*\R/\U) \foreach \X in {1,...,\D}{
-	    -- (\X*\A:\Y*\R/\U)
+        -- (\X*\A:\Y*\R/\U)
     } -- cycle;
   }
 
