@@ -1,5 +1,19 @@
+% Projectile
+% Author: Jon Engel
 \documentclass{beamer}
-\usepackage{tikz}\usetikzlibrary{decorations.pathreplacing}
+
+%%%<
+\usepackage{verbatim}
+%%%>
+
+\begin{comment}
+:Title: Projectile
+
+I made it for an introductory physics class to explain a common demonstration:   if you aim a gun at a target held in the air, and fire the instant the target is dropped, you always hit the target, no matter how fast your bullet goes.  There are a lot of numbers hard coded in, but it's not hard to alter the second example so that the initial velocity of the bullet is different.  You just change v0 and the number of frames (and the arrow representing v0).  I'm sure it can be made much more elegant.
+\end{comment}
+
+\usepackage{tikz}
+\usetikzlibrary{decorations.pathreplacing}
 \usepackage{animate}
 \usepackage{ifthen}
 \setbeamertemplate{navigation symbols}{}
@@ -22,10 +36,10 @@
       \ifthenelse{\icount > 1}% 
          {\draw[ultra thick,blue,->] (0,0) -- (\rvo*\rt,\rvo*\rt);
           \foreach \x in {.0,.1,...,\rt} \draw[blue] 
-	                                (\rvo*\x,\rvo*\x-\x*\x) circle (3pt);}{}
+                                    (\rvo*\x,\rvo*\x-\x*\x) circle (3pt);}{}
       \ifthenelse{\icount > 5}%
          {\draw[ultra thick,blue,->,shorten < =5pt] 
-	                  (\rvo*\rt,\rvo*\rt) -- (\rvo*\rt,\rvo*\rt-\rt*\rt);}{}
+                      (\rvo*\rt,\rvo*\rt) -- (\rvo*\rt,\rvo*\rt-\rt*\rt);}{}
       \ifthenelse{\icount > 7}
          {\draw[decorate,decoration={brace,amplitude=2mm},red] 
                                        (tar0.east) -- (tar.east);}{}
@@ -52,10 +66,10 @@
       \ifthenelse{\icount > 1}%
          {\draw[ultra thick,blue,->] (0,0) -- (\rvo*\rt,\rvo*\rt);
           \foreach \x in {.0,.1,...,\rt} \draw[blue] 
-	                               (\rvo*\x,\rvo*\x-\x*\x) circle (3pt);}{}
+                                   (\rvo*\x,\rvo*\x-\x*\x) circle (3pt);}{}
       \ifthenelse{\icount > 5}%
          {\draw[ultra thick,blue,->,shorten < =5pt] 
-	                  (\rvo*\rt,\rvo*\rt) -- (\rvo*\rt,\rvo*\rt-\rt*\rt);}{}
+                      (\rvo*\rt,\rvo*\rt) -- (\rvo*\rt,\rvo*\rt-\rt*\rt);}{}
    \end{tikzpicture}%
    }%
 \end{animateinline}
