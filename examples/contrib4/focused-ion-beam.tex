@@ -340,30 +340,30 @@ target, not only destructive but also constructive.
         (1.7,-3.7) -- (1.8,-3.4) -- (1.8,-3.3);
     \end{scope}
     % Beschriftung
-    \begin{scope}
-      \path[draw] (0.9,0.3) node[anchor=west] {Galliumquelle mit Heizwendel} to[out=180, in=45, arrow] (0.2,-0.3);
-      \path[draw] (1.5,-0.6) node[anchor=west] {\english{extractor}} to[out=180, in=45, arrow] (extractor);
-      \path[draw] (1.5,-0.3) node[anchor=west] {\english{suppressor}} to[out=180, in=45, shorten >=0.1cm, arrow] (suppressor);
-      \path[draw] (-0.7,0.5) node[anchor=east] (tmp) {Ionenpumpe Quelle} (tmp) to[out=-90, in=180, arrow] (-1.3, -0.2);
-      \path[draw] (-1.1,-1.2) node[anchor=east] {Austritt} to[out=0, in=225, arrow, shorten >=0.1cm] (emitter);
-      \path[draw] (1.5,-1.3) node[anchor=west] {Ionenpumpe} to[out=180, in=45, arrow] (1,-1.5);
-      \path[draw] (-0.9,-1.8) node[anchor=east] (quad) {Quadrupole 1, 2} to[out=0, in=160, arrow, shorten >=0.1cm] (quadA);
-      \path[draw]                               (quad) to[out=0, in=160, arrow, shorten >=0.1cm] (quadB);
-      \path[draw] (-1.1,-1.4) node[anchor=east] {1. Linse} to[out=0, in=135, arrow, shorten >=0.05cm] (linse1);
-      \path[draw] (1.5,-1.8) node[anchor=west] {Blende} to[out=180, in=60, arrow, shorten >=0.05cm] (blende);
-      \path[draw] (-1.1,-2.3) node[anchor=east] {\english{blanker}} to[out=0, in=140, arrow, shorten >=0.1cm] (blanker);
-      \path[draw] (-1.1,-2.7) node[anchor=east] {Faradaykäfig} to[out=0, in=140, arrow, shorten >=0.1cm] (faraday);
-      \path[draw] (-1.1,-3.1) node[anchor=east] (okto) {Oktopole 1, 2} to[out=0, in=140, arrow, shorten >=0.1cm] (octoA);
-      \path[draw]                               (okto) to[out=0, in=140, arrow, shorten >=0.1cm] (octoB);
-      \path[draw] (1.5,-2.1) node[anchor=west] {optische Einkopplung} to[out=180, in=70, arrow] (0.5, -2.9);
-      \path[draw] (2,-2.35) node[anchor=east] {Lichtquelle} to[out=0, in=50, arrow, shorten >=0.2cm] (2.2,-3.1);
-      \path[draw] (2,-4.1) node[anchor=west] {CCD Kamera} to[out=180, in=-70, arrow, shorten >=0.2cm] (1.7,-3.7);
-      \path[draw] (1.5,-4.5) node[anchor=west] {Objektiv} to[out=180, in=20, arrow] (0.5,-4.7);
-      \path[draw] (-1.1,-4.7) node[anchor=east] {2. Linse} to[out=0, in=150, arrow] (linse2);
-      \path[draw] (1.5,-5.1) node[anchor=west] {Gasinjektionsnadel} to[out=180, in=70, arrow] (0.7,-5.6);
-      \path[draw] (1.5,-5.8) node[anchor=west] {Probe} to[out=180, in=20, arrow] (0.3,-6);
-      \path[draw] (-1.1,-5.1) node[anchor=east] {Szintillator} to[out=0, in=110, arrow] (-0.8,-5.4);
-      \path[draw] (-1.1,-6) node[anchor=east] {Antennen} to[out=0, in=-120, arrow] (-0.7,-5.9);
+    \begin{scope}[arrow]
+      \path[draw] (0.9,0.3) node[anchor=west] {Galliumquelle mit Heizwendel} to[out=180, in=45] (0.2,-0.3);
+      \path[draw] (1.5,-0.6) node[anchor=west] {\english{extractor}} to[out=180, in=45] (extractor);
+      \path[draw,shorten >=0.1cm] (1.5,-0.3) node[anchor=west] {\english{suppressor}} to[out=180, in=45] (suppressor);
+      \path[draw] (-0.7,0.5) node[anchor=east] (tmp) {Ionenpumpe Quelle} (tmp) to[out=-90, in=180] (-1.3, -0.2);
+      \path[draw,shorten >=0.1cm] (-1.1,-1.2) node[anchor=east] {Austritt} to[out=0, in=225] (emitter);
+      \path[draw] (1.5,-1.3) node[anchor=west] {Ionenpumpe} to[out=180, in=45] (1,-1.5);
+      \path[draw,shorten >=0.1cm] (-0.9,-1.8) node[anchor=east] (quad) {Quadrupole 1, 2} to[out=0, in=160] (quadA);
+      \path[draw,shorten >=0.1cm]  (quad) to[out=0, in=160] (quadB);
+      \path[draw,shorten >=0.05cm] (-1.1,-1.4) node[anchor=east] {1. Linse} to[out=0, in=135] (linse1);
+      \path[draw,shorten >=0.05cm] (1.5,-1.8) node[anchor=west] {Blende} to[out=180, in=60] (blende);
+      \path[draw, shorten >=0.1cm] (-1.1,-2.3) node[anchor=east] {\english{blanker}} to[out=0, in=140] (blanker);
+      \path[draw, shorten >=0.1cm] (-1.1,-2.7) node[anchor=east] {Faradaykäfig} to[out=0, in=140] (faraday);
+      \path[draw, shorten >=0.1cm] (-1.1,-3.1) node[anchor=east] (okto) {Oktopole 1, 2} to[out=0, in=140] (octoA);
+      \path[draw, shorten >=0.1cm] (okto) to[out=0, in=140] (octoB);
+      \path[draw] (1.5,-2.1) node[anchor=west] {optische Einkopplung} to[out=180, in=70] (0.5, -2.9);
+      \path[draw,shorten >=0.2cm] (2,-2.35) node[anchor=east] {Lichtquelle} to[out=0, in=50] (2.2,-3.1);
+      \path[draw, shorten >=0.2cm] (2,-4.1) node[anchor=west] {CCD Kamera} to[out=180, in=-70] (1.7,-3.7);
+      \path[draw] (1.5,-4.5) node[anchor=west] {Objektiv} to[out=180, in=20] (0.5,-4.7);
+      \path[draw] (-1.1,-4.7) node[anchor=east] {2. Linse} to[out=0, in=150] (linse2);
+      \path[draw] (1.5,-5.1) node[anchor=west] {Gasinjektionsnadel} to[out=180, in=70] (0.7,-5.6);
+      \path[draw] (1.5,-5.8) node[anchor=west] {Probe} to[out=180, in=20] (0.3,-6);
+      \path[draw] (-1.1,-5.1) node[anchor=east] {Szintillator} to[out=0, in=110] (-0.8,-5.4);
+      \path[draw] (-1.1,-6) node[anchor=east] {Antennen} to[out=0, in=-120] (-0.7,-5.9);
     \end{scope}
   \end{scope}
 \end{tikzpicture}
