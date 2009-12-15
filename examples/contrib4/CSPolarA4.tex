@@ -5,6 +5,17 @@
 \usepackage[margin=0.5in,paper=a4paper]{geometry} %Shrinking margins to 0.5in
 \usepackage[x11names]{xcolor}                     %Additional colors
 \usepackage{tikz}
+%%%<
+\usepackage{verbatim}
+\usepackage[active,tightpage]{preview}
+\PreviewEnvironment{tikzpicture}
+\setlength\PreviewBorder{5pt}%
+%%%>
+
+\begin{comment}
+:Title:  Polar coordinates template
+
+\end{comment}
 \usepackage{euler}                                %Nicer numbers
 
 %Note about the colors: 
@@ -22,16 +33,16 @@
       \draw[SteelBlue3, thick] (0,0) circle (\r);    
     \foreach \r in {0.5, 1.5,...,7}
       \draw[Azure4, thin] (0,0) circle (\r);
-    %1° Rays
+    %1Â° Rays
     \foreach \a in {0, 1,...,359}
       \draw[Azure4] (\a:7.7) -- (\a:8);
-    %5° Rays
+    %5Â° Rays
     \foreach \a in {0, 5,...,359}
       \draw[Azure4] (\a:7.5) -- (\a:8);      
-    %15° Rays
+    %15Â° Rays
     \foreach \a in {0, 15,...,359}
       \draw[thick,Azure4] (\a:1) -- (\a:8); 
-    %30° Rays
+    %30Â° Rays
     \foreach \a in {0, 30,...,359}
       \draw[thick,Azure4] (0, 0) -- (\a:8);
     %Radius labels (background filled white)
