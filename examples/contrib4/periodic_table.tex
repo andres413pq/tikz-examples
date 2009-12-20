@@ -24,6 +24,15 @@
 
 \documentclass[]{article}
 
+%%%<
+\usepackage{verbatim}
+%%%>
+
+\begin{comment}
+:Title: Periodic Table of Chemical Elements
+
+\end{comment}
+
 \usepackage{tikz}
 \usepackage[active,tightpage]{preview}
 \usetikzlibrary{shapes,calc}
@@ -297,20 +306,31 @@
         (AcLr.south east) edge[dotted] (Lr.south east);
 
 %% Legend
-  \draw[black, AlkaliMetalFill] ($(La.north -| Fr.west) + (1em,-0.0em)$) rectangle +(1em, 1em) node[right, yshift=-1ex]{Alkali Metal};
-  \draw[black, AlkalineEarthMetalFill] ($(La.north -| Fr.west) + (1em,-1.5em)$) rectangle +(1em, 1em) node[right, yshift=-1ex]{Alkaline Earth Metal};
-  \draw[black, MetalFill] ($(La.north -| Fr.west) + (1em,-3.0em)$) rectangle +(1em, 1em) node[right, yshift=-1ex]{Metal};
-  \draw[black, MetalloidFill] ($(La.north -| Fr.west) + (1em,-4.5em)$) rectangle +(1em, 1em) node[right, yshift=-1ex]{Metalloid};
-  \draw[black, NonmetalFill] ($(La.north -| Fr.west) + (1em,-6.0em)$) rectangle +(1em, 1em) node[right, yshift=-1ex]{Non-metal};
-  \draw[black, HalogenFill] ($(La.north -| Fr.west) + (1em,-7.5em)$) rectangle +(1em, 1em) node[right, yshift=-1ex]{Halogen};
-  \draw[black, NobleGasFill] ($(La.north -| Fr.west) + (1em,-9.0em)$) rectangle +(1em, 1em) node[right, yshift=-1ex]{Noble Gas};
-  \draw[black, LanthanideActinideFill] ($(La.north -| Fr.west) + (1em,-10.5em)$) rectangle +(1em, 1em) node[right, yshift=-1ex]{Lanthanide/Actinide};
+  \draw[black, AlkaliMetalFill] ($(La.north -| Fr.west) + (1em,-0.0em)$)
+    rectangle +(1em, 1em) node[right, yshift=-1ex]{Alkali Metal};
+  \draw[black, AlkalineEarthMetalFill] ($(La.north -| Fr.west) + (1em,-1.5em)$)
+    rectangle +(1em, 1em) node[right, yshift=-1ex]{Alkaline Earth Metal};
+  \draw[black, MetalFill] ($(La.north -| Fr.west) + (1em,-3.0em)$)
+    rectangle +(1em, 1em) node[right, yshift=-1ex]{Metal};
+  \draw[black, MetalloidFill] ($(La.north -| Fr.west) + (1em,-4.5em)$)
+    rectangle +(1em, 1em) node[right, yshift=-1ex]{Metalloid};
+  \draw[black, NonmetalFill] ($(La.north -| Fr.west) + (1em,-6.0em)$)
+    rectangle +(1em, 1em) node[right, yshift=-1ex]{Non-metal};
+  \draw[black, HalogenFill] ($(La.north -| Fr.west) + (1em,-7.5em)$)
+    rectangle +(1em, 1em) node[right, yshift=-1ex]{Halogen};
+  \draw[black, NobleGasFill] ($(La.north -| Fr.west) + (1em,-9.0em)$)
+    rectangle +(1em, 1em) node[right, yshift=-1ex]{Noble Gas};
+  \draw[black, LanthanideActinideFill] ($(La.north -| Fr.west) + (1em,-10.5em)$)
+    rectangle +(1em, 1em) node[right, yshift=-1ex]{Lanthanide/Actinide};
 
-  \node at ($(La.north -| Fr.west) + (5em,-15em)$) [name=elementLegend, Element, fill=white] {\ElementText{Z}{mass}{Symbol}{Name}};
-  \node[Element, fill=white, right of=elementLegend, xshift=1em] {\SyntheticElementText{}{}{man-made}{}} ;
+  \node at ($(La.north -| Fr.west) + (5em,-15em)$) [name=elementLegend, Element, fill=white]
+    {\ElementText{Z}{mass}{Symbol}{Name}};
+  \node[Element, fill=white, right of=elementLegend, xshift=1em]
+    {\SyntheticElementText{}{}{man-made}{}} ;
 
 %% Diagram Title
-  \node at (H.west -| Fe.north) [name=diagramTitle, TitleLabel] {(Mendeleev's) Periodic Table of Chemical Elements via TikZ};
+  \node at (H.west -| Fe.north) [name=diagramTitle, TitleLabel]
+    {(Mendeleev's) Periodic Table of Chemical Elements via TikZ};
 
 \end{tikzpicture}
 \end{preview}
