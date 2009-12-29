@@ -53,7 +53,7 @@ definite integral.
 %
 %
 %
-\begin{frame}{Animated Integral}
+\begin{frame}[fragile]{Animated Integral}
 \begin{center}
 \begin{animateinline}[loop, poster = first, controls, palindrome]{2}
 \whiledo{\them < 21}{
@@ -83,10 +83,9 @@ definite integral.
     \ifthenelse{\them < 21}{
             \newframe
     }{
-
-    } 
+        \end{animateinline}\relax % BREAK
+    }
 } % END \whiledo...
-\end{animateinline}
 \end{center}
 \end{frame}
 
