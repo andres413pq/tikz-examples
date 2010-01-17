@@ -1,10 +1,30 @@
-% TikZ-Timing v0.7 2009/12/09 Example 8:
+% TikZ-Timing v0.7 2009/12/09 Example 8 & 9:
+% Author: Martin Scharrer
 %
 % This is an example for the 'tikz-timing' package.
 % It redraws the timing diagram taken from
 % http://commons.wikimedia.org/wiki/File:SR_FF_timing_diagram.png
+% http://en.wikipedia.org/wiki/File:SPI_timing_diagram.svg
 %
 \documentclass{article}
+%%%<
+\usepackage{verbatim}
+%%%>
+\begin{comment}
+:Title: More tikz-timing examples
+:Grid: 1x2
+
+This example shows how to make a timing diagrams with the `tikz-timing <http://www.ctan.org/tex-archive/help/Catalogue/entries/tikz-timing.html>`_  package. The timing diagrams were taken from an external source and redrawn in TeX to demonstrate the necessary steps.
+
+The external sources are:
+
+- `<http://commons.wikimedia.org/wiki/File:SR_FF_timing_diagram.png>`_
+- `<http://en.wikipedia.org/wiki/File:SPI_timing_diagram.svg>`_
+
+Timing diagrams like these can be done using the tikztimingtable environment which has the same syntax as a tabular environment with two columns. The first column holds the signal name, the second one the timing characters. See the `package manual <http://www.ctan.org/tex-archive/graphics/pgf/contrib/tikz-timing/tikz-timing.pdf>`_ for detailed information about them.
+
+\end{comment}
+
 \usepackage{tikz-timing}[2009/12/09]
 % Use tikz-timing library 'counters' to define a counter character.
 % This character draws a 'D{<counter value>}' and increases the counter
