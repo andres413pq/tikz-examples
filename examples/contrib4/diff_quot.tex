@@ -7,9 +7,24 @@
 %      'decorate'                                % 
 %       and the wonderful new 'spy'-feature      % 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
+% Note: This example requires PGF > 2.0 or a recent
+% development version of PGF.
 \documentclass{article}
 \usepackage{pgf,tikz}
+%%%<
+\usepackage{verbatim}
+\usepackage[active,tightpage]{preview}
+\PreviewEnvironment{tikzpicture}
+\setlength\PreviewBorder{5pt}%
+%%%>
+
+\begin{comment}
+:Title:  Difference quotient
+
+**Note**: Requires the development version of PGF due to the use of the spy library.
+
+\end{comment}
+
 \usepackage{pgfplots}
 \usetikzlibrary{spy}
 \usetikzlibrary{backgrounds}
