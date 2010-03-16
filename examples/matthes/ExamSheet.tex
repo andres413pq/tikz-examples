@@ -1,0 +1,51 @@
+% Exam sheet
+% Author: Alain Matthes
+% Requires pdflatex and two compilations to place the overlays correctly
+\documentclass{article}
+\usepackage{tikz}
+
+%%%<
+\usepackage{verbatim}
+%%%>
+
+\begin{comment}
+:Title: Exam sheet
+:Tags: Overlays, Transformations
+
+Overlays and the special ``current page`` node offers precise control of 
+placement on a page. One application is to create exam sheets where candidate details 
+can be hidden using a `dog ears`_ technique. 
+
+:Author: `Alain Matthes`_
+
+.. _Alain Matthes: http://www.altermundus.fr/index.html
+.. _dog ears: http://www.answers.com/topic/dog-ear
+
+\end{comment}
+
+\begin{document}
+ \thispagestyle{empty}
+\begin{tikzpicture}[remember picture, overlay]
+    \node [shift={(-8 cm,-8cm)}]  at (current page.north east)
+        {%
+        \begin{tikzpicture}[remember picture, overlay]
+            \draw(0,0) rectangle (8,8);
+            \draw [fill=gray] (0,8) -- (8,8) -- (8,0) -- cycle ;
+            \path[coordinate]
+                \foreach \k in {1,...,4}{%
+                    (0 pt,8cm -\k *1.2cm) coordinate (d\k)} ;
+            \path[clip] (0,0) rectangle (8,8);
+            \foreach \k/\t in {1/Last Name,2/First Name,3/Birthday,4/Date}{%
+                \node[inner sep=0pt,rotate=-45,%
+                    right=0.5cm,minimum height=12pt](f\k) at (d\k) {\t};
+                \draw  (f\k.south east)-- (8cm -\k * 1.2cm,-6pt );
+            }
+        \end{tikzpicture}
+        };
+        % Draw a page border
+        \draw (current page.north west) rectangle (current page.south east);
+\end{tikzpicture}
+
+
+\end{document}
+

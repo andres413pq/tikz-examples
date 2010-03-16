@@ -1,0 +1,200 @@
+% Author: Nick Papior Andersen
+%%%<
+% A decoration of a path which evolves with time. 
+% Settings is there such that you can change the
+% start amplitude, end amplitude and the wave length.
+% Furthermore you decide whether it should start as a cosine or sine wave.
+% The input of the items is also enabled as lists. Thus it regulates it self along the path.
+%
+% Of course the start size and end size can be switched which gives a decreasing wave.
+%%%>
+
+\documentclass{article}
+\usepackage{tikz}
+%%%<
+\usepackage{verbatim}
+\usepackage[active,tightpage]{preview}
+\PreviewEnvironment{tikzpicture}
+\setlength\PreviewBorder{5pt}%
+%%%>
+
+\begin{comment}
+:Title: Growing wave decoration
+
+A decoration of a path which evolves with time. 
+Options are available for changing the
+start amplitude, end amplitude and the wave length.
+Furthermore you decide whether it should start as a cosine or sine wave.
+The input of the items is also enabled as lists. Thus it regulates it self along the path.
+The start size and end size can be switched which gives a decreasing wave.
+
+\end{comment}
+
+\usetikzlibrary{decorations.pathreplacing}
+
+\def\pgfdecorationgrowthstart{0cm}
+\def\pgfdecorationgrowthendsizelist{0cm}
+\def\pgfdecorationgrowthwavelengthlist{0cm}
+\def\pgfdecorationgrowthendstepslist{1}
+\def\pgfdecorationgrowthendstep{1}
+\newif\ifpgfdecorationgrowthsine
+\newif\ifpgfdecorationgrowthcosine
+\newif\ifpgfdecorationonewavelength
+\pgfdecorationgrowthcosinefalse
+\pgfdecorationgrowthsinetrue
+\pgfkeys{%
+    /pgf/decoration/.cd,
+    growth start size/.initial=0.5cm,
+    growth end size/.initial=3cm,
+    growth end steps/.initial=1,
+    growth wave length/.initial=3pt,
+    growth sine/.code={\pgfdecorationgrowthsinetrue\pgfdecorationgrowthcosinefalse},
+    growth cosine/.code={\pgfdecorationgrowthsinefalse\pgfdecorationgrowthcosinetrue}
+}
+\def\pgfdecorationgrowthsetup{%
+    \global\edef\pgfdecorationgrowthstart{\pgfkeysvalueof{/pgf/decoration/growth start size}}%
+    \global\edef\pgfdecorationgrowthendsizelist{\pgfkeysvalueof{/pgf/decoration/growth end size}}%
+    \global\edef\pgfdecorationgrowthendstepslist{\pgfkeysvalueof{/pgf/decoration/growth end steps}}%
+    \global\edef\pgfdecorationgrowthwavelengthlist{\pgfkeysvalueof{/pgf/decoration/growth wave length}}%
+}
+
+\def\pgfdecorationgrowthsteps{1} % To keep track of steps from ending
+\def\pgfdecorationliststeps{2} % To keep track of list items from ending, has to start from 2
+
+\pgfdeclaredecoration{growth wave}{initial}%
+{
+    \state{initial}[width=0pt,next state=first] {%
+        \pgfdecorationgrowthsetup%
+        \pgfpathlineto{\pgfqpoint{0pt}{0pt}}%
+        \global\edef\pgfdecorationgrowthsteps{0}%
+        \global\edef\pgfdecorationliststeps{2}%
+        \foreach \endsize in \pgfdecorationgrowthendsizelist {%
+            \global\edef\pgfdecorationgrowthendsize{\endsize}%
+            \breakforeach%
+        }%
+        \foreach \growthstep in \pgfdecorationgrowthendstepslist {%
+            \global\edef\pgfdecorationgrowthendstep{\growthstep}%
+            \breakforeach%
+        }%
+        \foreach \wavelength in \pgfdecorationgrowthwavelengthlist {%
+            \global\edef\pgfdecorationgrowthwavelength{\wavelength}%
+            \breakforeach%
+        }%
+        \pgfmathparse{(\pgfdecorationgrowthendsize - \pgfdecorationgrowthstart) * 2 * %
+                \pgfdecorationgrowthwavelength / ( \pgfdecoratedremainingdistance * \pgfdecorationgrowthendstep)}%
+        \global\edef\pgfdecorationgrowth{\pgfmathresult}%
+    }%
+    
+    \state{first}[width=2*\pgfdecorationgrowthwavelength,next state=second] {%
+        \pgfdecorationgrowthstepcounters%
+        \pgfmathparse{\pgfdecorationgrowthstart + \pgfdecorationgrowthsteps * \pgfdecorationgrowth}%
+        % The wave starts
+        \ifpgfdecorationgrowthsine%
+            \pgfpathsine{\pgfqpoint{\pgfdecorationgrowthwavelength}{\pgfmathresult pt}}%
+            \pgfpathcosine{\pgfqpoint{\pgfdecorationgrowthwavelength}{-\pgfmathresult pt}}%
+        \fi%
+        \ifpgfdecorationgrowthcosine%
+            \pgfpathsine{\pgfqpoint{\pgfdecorationgrowthwavelength}{-\pgfmathresult pt}}%
+            \pgfpathcosine{\pgfqpoint{\pgfdecorationgrowthwavelength}{\pgfmathresult pt}}%
+        \fi%
+        \pgfdecorationgrowthstateend%
+    }%
+    
+    \state{second}[width=2*\pgfdecorationgrowthwavelength,next state=first] {%
+        \pgfdecorationgrowthstepcounters%
+        \pgfmathparse{\pgfdecorationgrowthstart + \pgfdecorationgrowthsteps * \pgfdecorationgrowth}%
+        % The wave continues
+        \ifpgfdecorationgrowthsine%
+            \pgfpathsine{\pgfqpoint{\pgfdecorationgrowthwavelength}{-\pgfmathresult pt}}%
+            \pgfpathcosine{\pgfqpoint{\pgfdecorationgrowthwavelength}{\pgfmathresult pt}}%
+        \fi%
+        \ifpgfdecorationgrowthcosine%
+            \pgfpathsine{\pgfqpoint{\pgfdecorationgrowthwavelength}{\pgfmathresult pt}}%
+            \pgfpathcosine{\pgfqpoint{\pgfdecorationgrowthwavelength}{-\pgfmathresult pt}}%
+        \fi%
+        \pgfdecorationgrowthstateend%
+    }
+    \state{final} {%
+        \pgfpathlineto{\pgfpointdecoratedpathlast}%
+    }%
+}
+\def\pgfdecorationgrowthstateend{%
+    \pgfmathadd{\pgfdecorationgrowthsteps}{1}%
+    \global\edef\pgfdecorationgrowthsteps{\pgfmathresult} % Redefine the steps counter, globally.
+}
+
+\def\pgfdecorationgrowthstepcounters{%
+    \pgfmathparse{\pgfdecorationgrowthendstep * \pgfdecoratedpathlength}
+    \ifdim\pgfdecoratedcompleteddistance>\pgfmathresult pt%
+        \foreach \endsize [count=\count] in \pgfdecorationgrowthendsizelist {%
+            \ifnum\count=\pgfdecorationliststeps%
+                \global\edef\pgfdecorationgrowthendsize{\endsize}%
+                \breakforeach%
+            \else%
+                \global\edef\pgfdecorationgrowthstart{\endsize}%
+            \fi%
+        }%
+        \global\edef\tempa{0}%
+        \foreach \growthstep [count=\count] in \pgfdecorationgrowthendstepslist {%
+            \ifnum\count=\pgfdecorationliststeps%
+                \global\edef\pgfdecorationgrowthendstep{\growthstep}%
+                \breakforeach%
+            \else%
+                \global\edef\tempa{\growthstep}%
+            \fi%
+        }%
+        \foreach \wavelength [count=\count] in \pgfdecorationgrowthwavelengthlist {%
+            \ifnum\count=\pgfdecorationliststeps%
+                \global\edef\pgfdecorationgrowthwavelength{\wavelength}%
+                \breakforeach%
+            \fi%
+        }%
+        \pgfmathparse{int(\pgfdecorationliststeps+1)}%
+        \global\edef\pgfdecorationliststeps{\pgfmathresult}%
+        \global\edef\pgfdecorationgrowthsteps{0}% Redefine the steps counter, globally.
+        \pgfmathparse{(\pgfdecorationgrowthendsize-\pgfdecorationgrowthstart) * 2 %
+                * \pgfdecorationgrowthwavelength / (\pgfdecoratedpathlength * (\pgfdecorationgrowthendstep -\tempa))}%
+        \global\edef\pgfdecorationgrowth{\pgfmathresult}%
+    \fi%
+}
+
+\begin{document}
+
+\begin{tikzpicture}
+    \draw[decorate,decoration={growth wave,
+        growth start size=2pt,
+        growth end size=.5cm,
+        growth wave length=5pt,
+        growth cosine}] (0,0) -- (3,0);
+    \draw[decorate,decoration={growth wave,
+        growth start size=0pt,
+        growth end size=.5cm,
+        growth wave length=2pt,
+        growth cosine},fill,color=red] (0,-1) rectangle (4,-4);
+    \foreach \start/\end/\xstep/\ystep in {0/-10/5/-5,5/-5/10/-10,10/-10/5/-15,5/-15/0/-10} {
+        \draw[fill,color=red,decorate,decoration={growth wave, % Choose the decoration
+            growth start size=1pt,               % Sets the start amplitude of the wave
+            growth end size={1cm,3cm,1cm,1pt},   % Sets the end amplitude of the wave
+            growth end steps={0.25,.5,.75,1},    % Sets the percentual path positions where the transitions
+                                                 % should be made
+            growth wave length={1pt,3pt,3pt,1pt},% Sets the wave lengths
+            growth sine}]                        % The wave starts as a sine
+                (\start,\end) -- (\xstep,\ystep);
+
+        \draw[fill,color=blue,decorate,decoration={growth wave, % Choose the decoration
+            growth start size=1pt,              % Sets the start amplitude of the wave
+            growth end size={1cm,3cm,1cm,1pt},  % Sets the end amplitudes of the wave
+            growth end steps={0.25,.5,.75,1},   % Sets the percentual path positions where the transitions 
+                                                % should be made
+            growth wave length={1pt,3pt,3pt,1pt},% Sets the wave lengths
+            growth cosine}]                     % The wave starts as a cosine
+                (\start,\end) -- (\xstep,\ystep);
+    }
+    \draw[xshift=5cm, decorate,decoration={growth wave,
+        growth start size=1cm,
+        growth end size=1pt,
+        growth wave length=2pt,
+        growth cosine},fill,color=red] (0,0) -- (3,0);
+\end{tikzpicture}
+
+\end{document}

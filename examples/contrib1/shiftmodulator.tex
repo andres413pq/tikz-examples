@@ -1,0 +1,87 @@
+% Example for an interconnection of signal flow diagrams.
+%
+% Author: Dr. Karlheinz Ochs, Ruhr-University of Bochum, Germany
+% Version: 0.1
+% Date: 2007/01/05
+\documentclass{article}
+\usepackage{signalflowdiagram}
+
+%%%<
+\usepackage{verbatim}
+\usepackage[active,tightpage]{preview}
+\PreviewEnvironment{signalflow}
+\setlength\PreviewBorder{5pt}%
+%%%>
+
+\begin{comment}
+:Title: Minimum shift keying modulator
+:Tag: MSK-modulator
+:Tags: Block diagrams, Macro packages
+
+An example of interconnection of signal flow diagrams using the signalflow library by
+Karlheinz Ochs. Common system blocks like minimum shift keying coders and pulse
+shapers are defined as macros for easy reuse and interconnection.
+
+Files:
+
+- Download the version of the ``signalflow`` library used in this example: `signalflow.zip`_
+
+.. _signalflow.zip: http://media.texample.net/tikz/examples/signalflowlibrary/signalflowlibrary.zip
+
+| Author: `Dr. Karlheinz Ochs`__, Ruhr-University of Bochum, Germany
+
+.. __: http://www.nt.ruhr-uni-bochum.de/Extern/en/Group/Who/Engineer/Ochs/person.htm
+
+\end{comment}
+\begin{document}
+
+% Note: The following macros are also defined in the macros.sty file
+
+%
+% Creates the signal flow diagram of a minimum shift keying coder.
+%
+% #1 = global label
+% #2 = parameter for placement
+\newcommand{\mskCoder}[3]{%
+   % building blocks
+   \node[modulator]  (#1-in)  [#2] {};
+   \node[multiplier] (mul)    [below from=#1-in] {$\mathrm{j}$};
+   \node[delay]      (del)    [right from=#1-in] {$T$};
+   \node[node]       (#1-out) [right from=del]   {};
+   % signal paths
+   \path[c>] (#1-in)  -- (del);
+   \path[c>] (del)    -- (#1-out);
+   \path[c>] (#1-out) |- (mul);
+   \path[c>] (mul)    -- (#1-in);
+}%
+
+% Creates the signal flow diagram of a pulse shaper.
+%
+% #1 = global label
+% #2 = parameter for placement
+\newcommand{\pulseShaper}[4]{%
+   % building blocks
+   \node[modulator]  (#1-in)  [#2] {};
+   \node[coordinate] (pam)
+      [above from = #1-in,
+       label=above:$\sum\limits_{\nu=-\infty}^{\infty} \delta(t-t_\nu)$] {};
+   \node[filter]     (#1-out) [right from = #1-in] {$q(t)$};
+   % signal paths
+   \path[r>] (pam)   -- (#1-in);
+   \path[c>] (#1-in) -- (#1-out);
+}%
+
+% interconnection of an MSK symbol encoder with a pulse shaper
+\begin{signalflow}{Minimum shift keying modulator}%
+   \node[input]  (in)                      {$x(t)$};
+   \mskCoder     {mC}  {right from=in}     {};
+   \pulseShaper  {pS}  {right from=mC-out} {};
+   \node[output] (out) [right from=pS-out] {$z(t)$};
+   % signal paths
+   \path[c>] (in)     -- (mC-in);
+   \path[c>] (mC-out) -- (pS-in);
+   \path[c>] (pS-out) -- (out);
+   \textaboveof{mC-out}{$y(t)$}
+\end{signalflow}
+
+\end{document}

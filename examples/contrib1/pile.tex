@@ -1,0 +1,104 @@
+% Daniell's Pile
+% Author: Agustin E. Bolzan
+\documentclass{article}
+\usepackage{tikz}
+
+%%%<
+\usepackage{verbatim}
+\usepackage[active,tightpage]{preview}
+\PreviewEnvironment{tikzpicture}
+\setlength\PreviewBorder{5pt}%
+%%%>
+
+\begin{comment}
+:Title: Daniell's pile
+:Tags: Physics & chemistry, Transparency
+
+This is an illustration of the famous Daniell's pile. Note how transparency has been 
+used to create an illusion of depth. To get the correct drawing order, the front and
+the back of the vessels had to be drawn separately.
+
+| Author: Agustin E. Bolzan 
+
+\end{comment}
+
+\begin{document}
+
+\definecolor{copper}{cmyk}{0,0.9,0.9,0.2}
+\colorlet{lightgray}{black!25}
+\colorlet{darkgray}{black!75}
+
+\centering
+\Large {Daniell's Pile}
+\vspace{2cm}
+
+
+\begin{tikzpicture}
+    % Draw back of vessel 1
+    \draw (0,0) to [controls=+(90:0.5) and +(90:0.5)] (2,0);
+    \draw[fill=blue!60, fill opacity=0.5] (0,-0.5) to
+        [controls=+(90:0.5) and +(90:0.5)] (2,-0.5);
+
+    % Draw back of vessel 2
+    \draw (3.5,0) to [controls=+(90:0.5) and +(90:0.5)] (5.5,0);
+    \draw[fill=lightgray, fill opacity=0.5] (3.5,-0.5) to [controls=+(90:0.5)
+        and +(90:0.5)] (5.5,-0.5);
+
+    % Draw copper electrode
+    \draw[fill=copper] (0.5,2) rectangle (1.5,-1);
+    \draw (0,2.3) node {Cu};
+    \draw (1,-1.75) node {\small{CuSO$_{4}$}};
+
+    % Draw salt bridge
+
+    \draw[join=round, line width = 10pt] (1.75,-1.75) -- (1.75,0.5) --
+        (3.75, 0.5) -- (3.75,-1.75);
+    \draw[join=round, line width = 5pt, color = gray!25] (1.75,-1.75) --
+        (1.75,0.5) -- (3.75, 0.5) -- (3.75,-1.75);
+    \draw (2.75,0.5) node {\tiny{KNO$_{3}$}};
+
+    %Draw front of vessel 1
+
+    \draw (0,0) .. controls +(-90:0.5) and +(-90:0.5) .. (2,0);
+    \draw (0,0) .. controls +(-90:0.5) and +(-90:0.5) .. (2,0)
+        -- (2,-0.5) .. controls +(-90:0.5) and +(-90:0.5) .. (0,-0.5) -- (0,0);
+
+    %Second part
+
+    \draw[fill=blue!60, fill opacity=0.5] (0,-0.5) .. controls +(-90:0.5)
+    and +(-90:0.5) .. (2,-0.5);
+    \draw[fill=blue!60, fill opacity=0.5] (0,-0.5) .. controls +(-90:0.5)
+    and +(-90:0.5) .. (2,-0.5)
+        -- (2,-2) .. controls +(-90:0.5) and +(-90:0.5) .. (0,-2) -- (0,-0.5);
+
+    % draw voltmeter
+
+    \draw[join = round, thick] (1,2) -- (1,2.5) -- (4.5,2.5) -- (4.5,2);
+    \draw (2.75,2.5) node [circle, draw, fill=red!30] {V};
+
+    %Draw back of vessel 2
+
+    %Draw electrode
+
+    \draw[fill=darkgray] (4,2) rectangle (5,-1);
+    \draw (5.5,2.3) node {Zn};
+    \draw (4.5,-1.75) node {\small{ZnSO$_{4}$}};
+
+    % Draw front of vessel 2
+    % part 1
+    \draw (3.5,0) .. controls +(-90:0.5) and +(-90:0.5) .. (5.5,0);
+    \draw (3.5,0) .. controls +(-90:0.5) and +(-90:0.5) .. (5.5,0)
+        -- (5.5,-0.5) .. controls +(-90:0.5) and +(-90:0.5)
+        .. (3.5,-0.5) -- (3.5,0);
+    % part 2
+    \draw[fill=lightgray, fill opacity=0.5] (3.5,-0.5) .. controls +(-90:0.5)
+    and +(-90:0.5) .. (5.5,-0.5);
+    \draw[fill=lightgray, fill opacity=0.5] (3.5,-0.5) .. controls +(-90:0.5)
+        and +(-90:0.5) .. (5.5,-0.5) --
+        (5.5,-2) .. controls +(-90:0.5) and +(-90:0.5)
+        .. (3.5,-2) -- (3.5,-0.5);
+
+\end{tikzpicture}
+
+
+\end{document} 
