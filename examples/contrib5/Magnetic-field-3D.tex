@@ -1,0 +1,194 @@
+\documentclass[11pt]{article}% Format article, police 11 par défaut (autres tailles : 10, 12)
+
+\usepackage[T1]{fontenc}
+\usepackage[frenchb]{babel}
+\usepackage{textcomp}
+\usepackage{lmodern}%police lmodern ou pour un meilleur affichage PDF. Autres possibilités: times, palatino, bookman, courier.
+\usepackage[latin1]{inputenc}
+\usepackage{a4wide}
+\usepackage{amssymb,amsmath}
+\usepackage{graphicx,xcolor}
+\usepackage{tikz}
+\usetikzlibrary{decorations,arrows,backgrounds,patterns}
+\usetikzlibrary{calc,fadings,decorations.pathreplacing,decorations.text,shapes,snakes}
+\usepgflibrary{snakes,arrows}
+\usepackage{rotating}
+\usepackage[active,pdftex,floats,tightpage]{preview}
+%%%>
+\PreviewEnvironment{tikzpicture}
+\setlength\PreviewBorder{2mm}
+%%%>
+\usepackage{verbatim}
+
+%%% Macro for 3D figures %%%
+\newcommand\pgfmathsinandcos[3]{%
+  \pgfmathsetmacro#1{sin(#3)}%
+  \pgfmathsetmacro#2{cos(#3)}%
+}
+\newcommand\LongitudePlane[3][current plane]{%
+  \pgfmathsinandcos\sinEl\cosEl{#2} % elevation
+  \pgfmathsinandcos\sint\cost{#3} % azimuth
+  \tikzset{#1/.estyle={cm={\cost,\sint*\sinEl,0,\cosEl,(0,0)}}}
+}
+\newcommand\LatitudePlane[3][current plane]{%
+  \pgfmathsinandcos\sinEl\cosEl{#2} % elevation
+  \pgfmathsinandcos\sint\cost{#3} % latitude
+  \pgfmathsetmacro\yshift{\cosEl*\sint}
+  \tikzset{#1/.estyle={cm={\cost,0,0,\cost*\sinEl,(0,\yshift)}}} %
+}
+\newcommand\DrawLongitudeCircle[2][1]{
+  \LongitudePlane{\angEl}{#2}
+  \tikzset{current plane/.prefix style={scale=#1}}
+   % angle of "visibility"
+  \pgfmathsetmacro\angVis{atan(sin(#2)*cos(\angEl)/sin(\angEl))} %
+  \draw[current plane] (\angVis:1) arc (\angVis:\angVis+180:1);
+  \draw[current plane,dashed] (\angVis-180:1) arc (\angVis-180:\angVis:1);
+}
+\newcommand\DrawLatitudeCircle[2][1]{
+  \LatitudePlane{\angEl}{#2}
+  \tikzset{current plane/.prefix style={scale=#1}}
+  \pgfmathsetmacro\sinVis{sin(#2)/cos(#2)*sin(\angEl)/cos(\angEl)}
+  % angle of "visibility"
+  \pgfmathsetmacro\angVis{asin(min(1,max(\sinVis,-1)))}
+  \draw[current plane] (\angVis:1) arc (\angVis:-\angVis-180:1);
+  \draw[current plane,dashed] (180-\angVis:1) arc (180-\angVis:\angVis:1);
+}
+%Option for nice arrows%
+\tikzset{%
+  >=latex, %
+  inner sep=0pt,%
+  outer sep=2pt,%
+  mark coordinate/.style={inner sep=0pt,outer sep=0pt,minimum size=3pt,
+    fill=black,circle}%
+}
+
+%%%% macro for unnumbered caption %%%%
+\makeatletter    % <=== in a .sty file delete this
+\newcommand{\unnumberedcaption}%
+	{\@dblarg{\@unnumberedcaption\@captype}}
+
+\newcommand{\@unnumberedcaption}{}% undefined yet
+\long\def\@unnumberedcaption#1[#2]#3{\par
+  \addcontentsline{\csname ext@#1\endcsname}{#1}{%
+    % orig: \protect\numberline{\csname the#1\endcsname}%
+    %{\ignorespaces #2}
+    \protect\numberline{}{\ignorespaces #2}%
+    }%
+  \begingroup
+    \@parboxrestore
+    \normalsize
+    % orig: \@makecaption{\csname fnum@#1\endcsname}%
+    %{\ignorespaces #3}\par
+    \@makeunnumberedcaption{\ignorespaces #3}\par
+  \endgroup}
+
+% redefine \@makeunnumberedcaption (like \@makecaption)
+% for your own layout
+\newcommand{\@makeunnumberedcaption}[1]{%
+  \vskip\abovecaptionskip
+  \sbox\@tempboxa{#1}%
+  \ifdim \wd\@tempboxa >\hsize
+    #1\par
+  \else
+    \global \@minipagefalse
+    \hbox to\hsize{\hfil\box\@tempboxa\hfil}%
+  \fi
+  \vskip\belowcaptionskip}
+
+% for LaTeX 2.09 compatibility, define \above/belowcaptionskip:
+\@ifundefined{abovecaptionskip}{%
+  \newlength{\abovecaptionskip}%
+  \setlength{\abovecaptionskip}{10pt}%
+}{}
+\@ifundefined{belowcaptionskip}{%
+  \newlength{\belowcaptionskip}%
+  \setlength{\belowcaptionskip}{0pt}%
+}{}
+\makeatother    % <=== in a .sty file delete this
+%%%% fin macro %%%%
+
+\begin{comment}
+:Title:  Dipolar magnetic field
+:Author: Cyril Langlois
+This tikz code provides a 3D plot of a dipolar magnetic field similar to the Earth's one. 
+The field lines are drawn in each longitude plane using the dipolar field equation.
+Like Earth's field, the north magnetic pole lies close to the south geographic pole and vice-versa. 
+
+The code is based on the Tomasz M. Trzeciak code for stereographic drawing and the plot command.
+\end{comment}
+%@@@@@@@@@@%
+\begin{document}
+%
+\begin{figure}[!htbp]
+\begin{center}
+%
+\begin{tikzpicture}[scale=1.0]
+%% some definitions
+\def\R{0.5} % sphere radius
+\def\angEl{30} % elevation angle
+\def\angAz{-140} % azimuth angle
+\def\angPhi{-105} % longitude of point 
+\def\angBeta{55} % latitude of point 
+\def\angGam{-190} % longitude of point
+%% working planes
+\pgfmathsetmacro\H{\R*cos(\angEl)} % distance to north pole
+\tikzset{xyplane/.estyle={cm={cos(\angAz),sin(\angAz)*sin(\angEl),-sin(\angAz),
+                              cos(\angAz)*sin(\angEl),(0,-\H)}}}
+\LongitudePlane[xzplane]{\angEl}{\angAz}%Plan de l'axe x
+\LongitudePlane[yzplane]{\angEl}{\angAz+90}%Plan de l'axe y
+\LatitudePlane[equator]{\angEl}{0}
+%
+\clip (-7,5) rectangle (7,-5);
+%
+\coordinate (O) at (0,0);
+%
+\begin{scope}[rotate around={-11.1:(0,0)}]
+%
+\foreach \u in {0,-40,...,-160}{
+\LongitudePlane[{{\u}zplane}]{\angEl}{\u}%Plan longitudinal
+\foreach \r in {0.25,0.5,...,2.25}{
+\draw[{{\u}zplane},color=red,smooth,variable=\t,samples at={0,-5,-10,...,-360}] plot ({(pow(\r,2))*(3*cos(\t)+cos(3*\t))},{(pow(\r,2))*(sin(\t)+sin(3*\t))});
+}
+}
+\foreach \u in {-200,-240,...,-320}{
+\LongitudePlane[{{\u}zplane}]{\angEl}{\u}%Plan longitudinal
+\foreach \r in {0.25,0.5,...,2.25}{
+\draw[{{\u}zplane},color=red,smooth,dashed,variable=\t,samples at={0,-5,-10,...,-360}] plot ({(pow(\r,2))*(3*cos(\t)+cos(3*\t))},{(pow(\r,2))*(sin(\t)+sin(3*\t))});
+}
+}
+\LongitudePlane[bzplane]{\angEl}{0}%Plan de dessin des vecteurs B
+\foreach \r in {0.25,0.5,...,2.25}{
+\draw[bzplane,color=red,smooth,thick,variable=\t,samples at={0,-5,-10,...,-360}] plot ({(pow(\r,2))*(3*cos(\t)+cos(3*\t))},{(pow(\r,2))*(sin(\t)+sin(3*\t))});
+}
+\draw[bzplane,very thick,->,>=stealth] ({(pow(1.25,2))*(3*cos(-30)+cos(3*-30))},{(pow(1.25,2))*(sin(-30)+sin(3*-30))}) -- +(-30:0.79cm)node[right]{$\vec{B_{r}}$};
+\draw[bzplane,very thick,->,>=stealth] ({(pow(1.25,2))*(3*cos(-30)+cos(3*-30))},{(pow(1.25,2))*(sin(-30)+sin(3*-30))}) -- +(60:0.68cm)node[right]{$\vec{B_{\theta}}$};
+%
+\draw[bzplane,very thick,->,>=stealth] ({(pow(1.25,2))*(3*cos(30)+cos(3*30))},{(pow(1.25,2))*(sin(30)+sin(3*30))}) -- +(-150:0.79cm)node[below]{$\vec{B_{r}}$};
+\draw[bzplane,very thick,->,>=stealth] ({(pow(1.25,2))*(3*cos(30)+cos(3*30))},{(pow(1.25,2))*(sin(30)+sin(3*30))}) -- +(120:0.68cm)node[above]{$\vec{B_{\theta}}$};
+%
+\begin{scope}[rotate around={11.1:(0,0)}]
+\fill[ball color=white,opacity=0.3] (O) circle (\R); %3D lighting effect
+\draw (O) circle (\R);
+\DrawLongitudeCircle[\R]{\angAz} % xzplane
+\DrawLongitudeCircle[\R]{\angAz+90} % vzplane
+\DrawLatitudeCircle[\R]{0} % equator
+\DrawLatitudeCircle[\R]{70} % Latitude 70
+\DrawLatitudeCircle[\R]{-70} % Latitude -70
+\end{scope}
+%
+\coordinate[mark coordinate] (Sm) at (0,\H);
+\coordinate[mark coordinate] (Nm) at (0,-\H);
+\path[xzplane](Nm) -- +(0,-0.75)coordinate(Nm1)node[below]{\textbf{N$_{m}$}};
+\path[xzplane](Sm) -- +(0,0.75)coordinate(Sm1)node[above]{\textbf{S$_{m}$}};
+\draw[very thick,dashed](Sm) -- (Nm);
+\draw[very thick](Sm1) -- (Sm);
+\draw[very thick,->,>=latex'](Nm) -- (Nm1);
+
+\end{scope}
+\end{tikzpicture}
+\unnumberedcaption{Schematic Earth dipolar magnetic field. The field lines placed in the page plane are drawn as thick lines, those back with dashed lines and the field lines in front of the page with thin lines.}
+\end{center}
+\end{figure}
+
+%@@@@@@@@@@%
+\end{document}
