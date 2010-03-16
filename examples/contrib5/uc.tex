@@ -1,3 +1,7 @@
+% Unit circle
+% Author: Supreme Aryal
+% A unit circle with cosine and sine values for some
+% common angles.
 \documentclass[landscape]{article}
 \usepackage{tikz}
 \usepackage[top=1in,bottom=1in,right=1in,left=1in]{geometry}
@@ -39,8 +43,8 @@
             360/2\pi}
                 \draw (\x:0.85cm) node[fill=white] {$\xtext$};
 
-        % the coordinates for the first quadrant
         \foreach \x/\xtext/\y in {
+            % the coordinates for the first quadrant
             30/\frac{\sqrt{3}}{2}/\frac{1}{2},
             45/\frac{\sqrt{2}}{2}/\frac{\sqrt{2}}{2},
             60/\frac{1}{2}/\frac{\sqrt{3}}{2},
@@ -52,7 +56,7 @@
             210/-\frac{\sqrt{3}}{2}/-\frac{1}{2},
             225/-\frac{\sqrt{2}}{2}/-\frac{\sqrt{2}}{2},
             240/-\frac{1}{2}/-\frac{\sqrt{3}}{2},
-            % draw the coordinates for the fourth quadrant
+            % the coordinates for the fourth quadrant
             330/\frac{\sqrt{3}}{2}/-\frac{1}{2},
             315/\frac{\sqrt{2}}{2}/-\frac{\sqrt{2}}{2},
             300/\frac{1}{2}/-\frac{\sqrt{3}}{2}}
