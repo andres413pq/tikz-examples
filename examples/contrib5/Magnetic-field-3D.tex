@@ -17,6 +17,19 @@
 \setlength\PreviewBorder{5pt}%
 %%%>
 
+\begin{comment}
+:Title:  Dipolar magnetic field
+:Author: Cyril Langlois
+
+This tikz code provides a 3D plot of a dipolar magnetic field similar to the Earth's one.
+The field lines are drawn in each longitude plane using the dipolar field equation.
+Like Earth's field, the north magnetic pole lies close to the south geographic pole and vice-versa.
+
+The code is based on the `Tomasz M. Trzeciak code for stereographic drawing <http://www.texample.net/tikz/examples/map-projections/>`_ and the plot command.
+
+\end{comment}
+
+
 %%% Macro's for 3D figures %%%
 \newcommand\pgfmathsinandcos[3]{%
     \pgfmathsetmacro#1{sin(#3)}%
@@ -51,15 +64,6 @@
     \draw[current plane,dashed] (180-\angVis:1) arc (180-\angVis:\angVis:1);
 }
 
-\begin{comment}
-:Title:  Dipolar magnetic field
-:Author: Cyril Langlois
-This tikz code provides a 3D plot of a dipolar magnetic field similar to the Earth's one.
-The field lines are drawn in each longitude plane using the dipolar field equation.
-Like Earth's field, the north magnetic pole lies close to the south geographic pole and vice-versa.
-
-The code is based on the Tomasz M. Trzeciak code for stereographic drawing and the plot command.
-\end{comment}
 
 \begin{document}
 \begin{tikzpicture}[scale=1.0,
