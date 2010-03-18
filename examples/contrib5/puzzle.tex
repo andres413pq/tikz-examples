@@ -4,7 +4,6 @@
 %%%<
 \usepackage{verbatim}
 \usepackage[active,tightpage]{preview}
-\PreviewEnvironment{tikzpicture}
 \setlength\PreviewBorder{5pt}%
 %%%>
 
@@ -105,7 +104,7 @@ This tikz example display a puzzle with a text inside.
 \begin{preview}
 \begin{tikzpicture}
    \begin{scope}[even odd rule]
-      \clip (-1,-1) rectangle (10,10)
+      \clip (-1,-1) rectangle (5,4)
             {[puzzle piece] (0,0) to (1.5,1.0)};
       \tikzIsFun
    \end{scope}
