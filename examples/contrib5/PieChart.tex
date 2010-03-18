@@ -1,0 +1,95 @@
+% Parametrized pie chart from pgf documentation
+% Authors: Andrey Maglyas, Alexander Smirnov
+
+\documentclass{minimal}
+
+\usepackage{tikz}
+
+\begin{document}
+\pagestyle{empty}
+% the current version of pgf doesn't support rounding of floating numbers
+% so there can be problems with some sets of data 
+% as everything is rounded up to integers which leads to the 
+% mistakes in percents up to 1%
+
+\newcommand{\ModifiedPieChart}[5]{
+%#1 - inner circle radius
+%#2 - outer circle radius
+%#3 - text in the center
+%#4 - data, label, color
+%#5 - data labels distance in percents of outer circle radius
+
+%text in the center
+\pgfmathparse{#1*2/0.8}
+\node[text centered, text width=\pgfmathresult cm] {#3};
+
+%count total amount of elements
+\def\total{0}
+\foreach \d/\l/\c in {#4}
+{
+	\pgfmathparse{\d+\total}
+	\global\let\total\pgfmathresult
+}
+
+\pgfmathparse{360/\total*10}
+\let\slicesize\pgfmathresult
+
+\begin{scope}
+
+\def\previous{0} % previous angle
+\def\t{0} % current angle
+
+\def\percents{0}
+
+\foreach \d/\l/\c in {#4}
+{
+	\pgfmathparse{\d/\total*360}
+	\global\let\t\pgfmathresult
+
+	\pgfmathparse{\previous+\t}
+	\global\let\angle\pgfmathresult
+
+	\pgfmathparse{\t/2 + \previous}
+	\global\let\dataLabelAngle\pgfmathresult
+
+	% determine the text position
+	\pgfmathparse{#2*#5}
+	\let\dataLabelRadius\pgfmathresult
+	
+	% to avoid digits after point
+	\pgfmathparse{ round(\t/3.6) }
+	\let\percents\pgfmathresult
+	
+	% display percents and count
+	\draw(\dataLabelAngle:\dataLabelRadius) node{\l: \d \ (\percents \%) };
+	
+	% draw arcs
+	\fill[color=\c] (\previous:#1) arc (\previous:\angle:#1)--(\angle:#2) 
+	[rotate=\angle]arc (0:-\t:#2) -- cycle ;
+	
+	\global\let\previous\angle
+
+}
+
+\end{scope}
+
+%grid
+\newcount\mycount
+\foreach \angle in {0,\slicesize,...,3599}
+{
+    \mycount=\angle\relax
+ 	\divide\mycount by 10\relax
+ 	\draw[black!15, thick] (\the\mycount:#2) -- (\the\mycount:#1);
+}
+
+%two circles
+\draw[black] (0,0) circle (#1) circle (#2);
+
+}
+	
+
+\begin{tikzpicture}
+\ModifiedPieChart{2}{2.5}{Some text}{30/D/yellow, 10/F/green!20, 20/A/red}{1.4}
+\end{tikzpicture}
+
+\end{document}

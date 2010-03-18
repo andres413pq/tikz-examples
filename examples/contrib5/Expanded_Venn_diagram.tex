@@ -1,0 +1,67 @@
+\documentclass{article}
+% Created by Uwe Ziegenhagen
+% This is just an expanded version
+% of an example provided by T. Tantau
+
+\usepackage{tikz}
+\usetikzlibrary{shapes,backgrounds}
+\begin{document}
+\pagestyle{empty} % No page numbering
+
+% Definition of circles
+\def\firstcircle{(0,0) circle (1.5cm)}
+\def\secondcircle{(0:2cm) circle (1.5cm)}
+
+% Set &quot;A and B&quot;
+\begin{tikzpicture}
+       \draw \firstcircle node {$A$};
+       \draw \secondcircle node {$B$};
+   \begin{scope}
+     \clip \firstcircle;
+     \fill[blue] \secondcircle;
+   \end{scope}
+\end{tikzpicture}
+
+%Set &quot;A or B but not A and B&quot;
+\begin{tikzpicture}
+       \draw[fill=blue] \firstcircle node {$A$};
+       \draw[fill=blue] \secondcircle node {$B$};
+       \draw \firstcircle ;
+   \begin{scope}
+     \clip \firstcircle;
+     \fill[white] \secondcircle;
+   \end{scope}
+\end{tikzpicture}
+
+% Set &quot;A or B&quot;
+\begin{tikzpicture}
+       \draw[fill=blue] \firstcircle node {$A$};
+       \draw[fill=blue] \secondcircle node {$B$};
+       \draw \firstcircle;
+\end{tikzpicture}
+
+% Set &quot;A not B&quot;
+\begin{tikzpicture}
+   \begin{scope}
+       \begin{scope}[even odd rule]% first circle without the second
+           \clip \secondcircle (-1.5,-1.5) rectangle (1.5,1.5);
+       \fill[blue] \firstcircle;
+       \end{scope}
+       \draw \firstcircle node {$A$};
+       \draw \secondcircle node {$B$};
+   \end{scope}
+\end{tikzpicture}
+
+% Set &quot;B not A&quot;
+\begin{tikzpicture}
+   \begin{scope}
+       \begin{scope}[even odd rule]% first circle without the second
+           \clip \firstcircle (0,-3) rectangle (4.5,1.5);
+       \fill[blue] \secondcircle;
+       \end{scope}
+       \draw \firstcircle node {$A$};
+       \draw \secondcircle node {$B$};
+   \end{scope}
+\end{tikzpicture}
+
+\end{document}
