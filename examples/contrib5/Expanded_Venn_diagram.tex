@@ -1,67 +1,84 @@
 \documentclass{article}
-% Created by Uwe Ziegenhagen
-% This is just an expanded version
-% of an example provided by T. Tantau
+% Set operations illustrated with Venn diagrams
+% Author: Uwe Ziegenhagen
+% This is an expanded version of an example provided by T. Tantau
 
 \usepackage{tikz}
-\usetikzlibrary{shapes,backgrounds}
+%%%<
+\usepackage{verbatim}
+\usepackage[active,tightpage]{preview}
+\PreviewEnvironment{tikzpicture}
+\setlength\PreviewBorder{5pt}%
+%%%>
+
+\begin{comment}
+:Title: Set operations illustrated with Venn diagrams
+:Tags: Mathematics; Clipping
+:Author: Uwe Ziegenhagen
+
+This is an expanded version of an example provided by T. Tantau
+\end{comment}
+
 \begin{document}
-\pagestyle{empty} % No page numbering
 
 % Definition of circles
 \def\firstcircle{(0,0) circle (1.5cm)}
 \def\secondcircle{(0:2cm) circle (1.5cm)}
 
-% Set &quot;A and B&quot;
+\colorlet{circle edge}{blue!50}
+\colorlet{circle area}{blue!20}
+
+\tikzset{filled/.style={fill=circle area, draw=circle edge, thick},
+    outline/.style={draw=circle edge, thick}}
+
+\setlength{\parskip}{5mm}
+% Set A and B
 \begin{tikzpicture}
-       \draw \firstcircle node {$A$};
-       \draw \secondcircle node {$B$};
-   \begin{scope}
-     \clip \firstcircle;
-     \fill[blue] \secondcircle;
-   \end{scope}
+    \begin{scope}
+        \clip \firstcircle;
+        \fill[filled] \secondcircle;
+    \end{scope}
+    \draw[outline] \firstcircle node {$A$};
+    \draw[outline] \secondcircle node {$B$};
+    \node[anchor=south] at (current bounding box.north) {$A \cap B$};
 \end{tikzpicture}
 
-%Set &quot;A or B but not A and B&quot;
+%Set A or B but not (A and B) also known a A xor B
 \begin{tikzpicture}
-       \draw[fill=blue] \firstcircle node {$A$};
-       \draw[fill=blue] \secondcircle node {$B$};
-       \draw \firstcircle ;
-   \begin{scope}
-     \clip \firstcircle;
-     \fill[white] \secondcircle;
-   \end{scope}
+    \draw[filled, even odd rule] \firstcircle node {$A$}
+                                 \secondcircle node{$B$};
+    \node[anchor=south] at (current bounding box.north) {$\overline{A \cap B}$};
 \end{tikzpicture}
 
-% Set &quot;A or B&quot;
+% Set A or B
 \begin{tikzpicture}
-       \draw[fill=blue] \firstcircle node {$A$};
-       \draw[fill=blue] \secondcircle node {$B$};
-       \draw \firstcircle;
+    \draw[filled] \firstcircle node {$A$}
+                  \secondcircle node {$B$};
+    \node[anchor=south] at (current bounding box.north) {$A \cup B$};
 \end{tikzpicture}
 
-% Set &quot;A not B&quot;
+% Set A but not B
 \begin{tikzpicture}
-   \begin{scope}
-       \begin{scope}[even odd rule]% first circle without the second
-           \clip \secondcircle (-1.5,-1.5) rectangle (1.5,1.5);
-       \fill[blue] \firstcircle;
-       \end{scope}
-       \draw \firstcircle node {$A$};
-       \draw \secondcircle node {$B$};
-   \end{scope}
+    \begin{scope}
+        \clip \firstcircle;
+        \draw[filled, even odd rule] \firstcircle node {$A$}
+                                     \secondcircle;
+    \end{scope}
+    \draw[outline] \firstcircle
+                   \secondcircle node {$B$};
+    \node[anchor=south] at (current bounding box.north) {$A - B$};
 \end{tikzpicture}
 
-% Set &quot;B not A&quot;
+% Set B but not A
 \begin{tikzpicture}
-   \begin{scope}
-       \begin{scope}[even odd rule]% first circle without the second
-           \clip \firstcircle (0,-3) rectangle (4.5,1.5);
-       \fill[blue] \secondcircle;
-       \end{scope}
-       \draw \firstcircle node {$A$};
-       \draw \secondcircle node {$B$};
-   \end{scope}
+    \begin{scope}
+        \clip \secondcircle;
+        \draw[filled, even odd rule] \firstcircle
+                                     \secondcircle node {$B$};
+    \end{scope}
+    \draw[outline] \firstcircle node {$A$}
+                   \secondcircle;
+    \node[anchor=south] at (current bounding box.north) {$B - A$};
 \end{tikzpicture}
 
 \end{document}
