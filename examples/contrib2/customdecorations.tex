@@ -1,0 +1,73 @@
+\documentclass{article}
+\usepackage{tikz}
+\usepackage{tikz}
+%%%<
+\usepackage{verbatim}
+\usepackage[active,tightpage]{preview}
+\PreviewEnvironment{tikzpicture}
+\setlength\PreviewBorder{5pt}%
+%%%>
+
+\begin{comment}
+:Title: Lipid vesicle
+
+Illustration of a vesicle_ composed of two lipid layers. A custom decoration is created to
+place lipid leaflets evenly on a circle.
+
+.. _vesicle: http://en.wikipedia.org/wiki/Lipid_vesicle
+
+:Source: `pgf-users mailing list`__
+
+.. __: http://www.nabble.com/Spread-decorations-evenly-on-a-circle-td22202756.html#a22202756
+\end{comment}
+\usetikzlibrary{decorations,decorations.pathreplacing}
+
+\begin{document}
+
+% Define decoration
+\pgfdeclaredecoration{lipidleaflet}{initial}
+{
+  % Place as many segments as possible along the path to decorate
+  % the minimum distance between two segments is set to 7 pt.
+  \state{initial}[width=\pgfdecoratedpathlength/floor(\pgfdecoratedpathlength/7pt)]
+  {
+    % Draw the two acyl chains
+    \pgfpathmoveto{\pgfpoint{-1pt}{0pt}}
+    \pgfpathlineto{\pgfpoint{-1pt}{-10pt}}
+    \pgfpathmoveto{\pgfpoint{1pt}{0pt}}
+    \pgfpathlineto{\pgfpoint{1pt}{-10pt}}
+    % Draw the head group
+    \pgfpathmoveto{\pgfpoint{1pt}{0pt}}
+    \pgfpathcircle{\pgfpoint{0pt}{2pt}}{2.5pt}
+  }
+  \state{final}
+  {
+    \pgfpathmoveto{\pgfpointdecoratedpathlast}
+  }
+}
+
+% Draw a vesicle composed of two lipid layers
+\begin{tikzpicture}
+% Micelle
+\draw[decorate, decoration={lipidleaflet, mirror}] (0, 3) circle (0.6cm);
+\draw (0, 2) node {Micelle};
+
+% Inverted micelle
+\draw[decorate, decoration={lipidleaflet}] (0, 0) circle (0.45cm);
+\draw (0, -1) node {Inverted micelle};
+
+% Lipid bilayer
+\draw[decorate, decoration={lipidleaflet, mirror}]
+  (-1, -2.8) -- (2, -2.8);
+\draw[decorate, decoration={lipidleaflet}]
+  (-1, -2) -- (2, -2);
+\draw (0, -3.5) node {Lipid bilayer};
+
+% Vesicle
+\draw[decorate, decoration={lipidleaflet}] (5, 0.5) circle (2.5cm);
+\draw[decorate, decoration={lipidleaflet, mirror}] (5, 0.5) circle (3.3cm);
+\draw (5, -3.5) node {Vesicle};
+
+\end{tikzpicture}
+
+\end{document} 

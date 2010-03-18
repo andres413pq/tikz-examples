@@ -1,0 +1,68 @@
+% Venn diagram with magnifier
+% Author: Dennis Heidsiek
+\documentclass{minimal}
+
+\usepackage{tikz}
+\usetikzlibrary{spy}
+
+\usepackage{verbatim}
+\usepackage[active,tightpage]{preview}
+\PreviewEnvironment{tikzpicture}
+
+\begin{document}
+\pagestyle{empty}
+
+\begin{comment}
+:Title: Venn diagram with magnifier
+
+This example shows how to add a glass to magnify a special part of a pictures.
+It makes use of the new spy library, so you'll need a recent TikZ version [1]
+to compile it.
+
+It was created by Dennis Heidsiek [2], based on the example [3],
+inspired by a sketch in [4].
+
+- [1] http://www.texample.net/tikz/builds/
+- [2] http://www.google.com/profiles/Dennis.Heidsiek
+- [3] http://www.texample.net/tikz/examples/venn-diagram/
+- [4] http://wiki.the-big-bang-theory.com/wiki/Psychic_Vortex
+
+\end{comment}
+
+% First, we define three circles:
+\def\firstcircle{(-2,0) circle (2.4)}
+\def\secondcircle{(2,0) circle (2.4)}
+\pgfmathparse{-(2.4^2-2^2)^0.5} % by pythagoras
+\let\h\pgfmathresult % shortcut for further use
+\def\thirdcircle{(0,\h) circle (0.2cm)}
+
+\begin{tikzpicture}
+ % Let's draw the scene (to magnify):
+  \begin{scope}[spy using outlines=
+      {magnification=16, size=8cm, connect spies, rounded corners}]
+    
+    % the boarder:
+    \draw[thick, rounded corners] (-5,-4) rectangle (5,4);
+    \draw (0,3.3) node[scale=2] {the universe of all jobs};
+    
+    % The transparency:
+    \begin{scope}[fill opacity=0.5]
+      \fill[red] \firstcircle;
+      \fill[green] \secondcircle;
+      \fill[blue] \thirdcircle;
+    \end{scope}
+    
+    % letterings and missing pieces:
+    \draw[align=center] \firstcircle node {what you\\would like\\to do};
+    \draw[align=center] \secondcircle node {what you\\are able\\to do};
+    \draw \thirdcircle
+      (0,-2.3) node[align=center] {em-\\ployment\\you get paid enough for};
+    \fill (0,\h+0.12) circle (0.005)
+        node[scale=0.11, align=center] {perfect\\job};
+    
+    % now we can draw the magnifying glass:
+    \spy [red] on (0,\h) in node [left] at (13.25,0);
+  \end{scope}
+\end{tikzpicture}
+
+\end{document}

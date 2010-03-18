@@ -1,0 +1,115 @@
+\documentclass[showtrims]{memoir}
+
+\begin{comment}
+:Title: Modifying the current page node
+:Slug: modifying-current-page-node
+:Tags: Absolute positioning
+:Grid: 2x1
+
+The special ``current page`` node allows you to draw on the current page using
+absolute coordinates. The anchors ``current page.north west`` and ``current page.south east``
+are the top left and bottom right corners of the current physical page.
+So, if you want to put a nice border around the page you can simply write:
+
+.. sourcecode:: latex
+
+    ...
+    \usetikzlibrary{decorations.pathmorphing}
+    ...
+    \tikz[remember picture,overlay] {%
+        \draw[thick,red, decorate,decoration={snake}]
+            (current page.north west) rectangle (current page.south east);
+    }
+
+Unfortunately the ``current page`` node does not work if you want to
+print your document on stock paper that is larger than your page size.
+A common scenario is to print for instance a B5 page on an A4 page.
+This example shows you can modify the code for the ``current page`` node to
+take stock paper and `recto and verso pages`_ into account.
+
+The example defines the ``\setpagenode`` macro. When called it will
+modify the ``current page`` node. If your page is centered on the stock paper
+you only need to calculate the node once. If your page is not centered the
+relevant page dimensions will be different depending on whether it is an odd
+or even page. This unfortunately requires a recalculation for every page that
+access the ``current page`` node. A quick hack save to some typing is to force
+a recalculation every time the ``overlay`` style is used. Thanks to PGF's powerful
+``pgfkeys`` library this is quite easy:
+
+
+.. sourcecode:: latex
+
+    \pgfkeys{/tikz/overlay/.add code={}{\setpagenode}}
+
+
+**Note**: This example is specific to the Memoir document class. For other document
+classes you have to consult the documentation for the appropriate page dimensions.
+
+
+.. _recto and verso pages: http://en.wikipedia.org/wiki/Recto_and_verso
+
+
+\end{comment}
+
+% Set stock size to A4
+\setstocksize{297mm}{210mm}
+% Set page size to B5
+\settrimmedsize{250mm}{176mm}{*}
+\isopage
+\checkandfixthelayout
+
+\usepackage{tikz}
+\usetikzlibrary{decorations.pathmorphing}
+
+% Special current page bounding box rectangle that adapts to stock paper sizes
+% and recto/verso pages
+\newcommand\setpagenode{
+    % The original current page node code can be found in the file
+    % generic/pgf/modules/pgfmoduleshapes.code.tex
+    \expandafter\def\csname pgf@sh@ns@current page\endcsname{rectangle}
+    % Use a few low level Memoir macros to check if we are on an even or odd page.
+    \strictpagecheck
+    \checkoddpage
+    \ifoddpage%
+        \expandafter\def\csname pgf@sh@np@current page\endcsname{%
+          % Set the current page.south west coordinate
+          \def\southwest{\pgfpoint{\stockwidth-\paperwidth-\trimedge}%
+                                  {\stockheight-\trimtop-\paperheight}}%
+          % Set the current page.north east coordinate
+          \def\northeast{\pgfpoint{\stockwidth-\trimedge}{\stockheight-\trimtop}}%
+        }
+    \else
+        \expandafter\def\csname pgf@sh@np@current page\endcsname{%
+          \def\southwest{\pgfpoint{\trimedge}{\stockheight-\trimtop-\paperheight}}%
+          \def\northeast{\pgfpoint{\trimedge+\paperwidth}{\stockheight-\trimtop}}%
+        }
+    \fi
+    \expandafter\def\csname pgf@sh@nt@current page\endcsname{{1}{0}{0}{1}{0pt}{0pt}}
+    \expandafter\def\csname pgf@sh@pi@current page\endcsname{pgfpageorigin}
+}
+
+\begin{document}
+
+
+% Force recalculation of the current page node whenever the overlay option is used.
+% If you page is centered on your stock paper it is only necessary to calculate
+% the current page rectangle once.
+\pgfkeys{/tikz/overlay/.add code={}{\setpagenode}}
+
+\HUGE Verso page
+
+\tikz[remember picture,overlay] {%
+    \draw[thick,red, decorate,decoration={snake}]
+        (current page.north west) rectangle (current page.south east);
+}
+
+
+\newpage
+\HUGE Recto page
+
+\tikz[remember picture,overlay] {%
+    \draw[thick,red, decorate,decoration={snake}]
+        (current page.north west) rectangle (current page.south east);
+}
+
+\end{document}

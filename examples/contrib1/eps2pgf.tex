@@ -1,0 +1,120 @@
+
+\documentclass{article}%
+
+\usepackage{tikz}
+
+
+%%%<
+\usepackage{verbatim}
+\usepackage[active,tightpage]{preview}
+\setlength\PreviewBorder{0pt}%
+\PreviewEnvironment{pgfpicture}
+%%%>
+
+\begin{comment}
+:Title: eps2pgf
+:Tags: Code generation
+:Grid: 1x2
+
+
+Eps2pgf_ is a PostScript interpreter that converts EPS figures to PGF code for 
+inclusion in LaTeX documents. The author is `Paul Wagenaars`_. 
+
+Eps2pgf_ is a Java command line tool. Here is an example on how to create a PGF version
+of the well known PostScript tiger::
+
+    $ java -jar eps2pgf.jar tiger.eps -o tiger.pgf
+
+To display the tiger you have to include it in a LaTeX document:
+
+.. sourcecode:: latex
+
+    \documentclass{article}
+    \usepackage{pgf}
+    \begin{document}
+        \input{tiger.pgf}
+    \end{document}
+
+.. figure:: #eps2pgf1.png
+
+The generated PGF code can be found in the file `tiger.pgf`_. 
+
+The most interesting part of eps2pgf is that it allows you to replace text in the EPS figure with
+arbitrary LaTeX markup. It is in fact an alternative to using tools like PSfrag_, and it is
+even compatible with PSfrag_. See the documentation for more details. 
+
+One application of eps2pgf is to annotate Matlab plots. Here is an example:
+
+.. sourcecode:: matlab
+
+    theta=0:0.05:5;
+    y=sin(theta.^2);
+    plot(theta,y);
+    ylabel('\tex[cc][]{$y$}')
+    xlabel('\tex[cc][]{$\theta$}')
+    title('\tex[cc][]{$\sin\theta^2$}')
+    text(1,0,'\tex{\LaTeX}')
+
+The ``\tex{...}`` syntax allows you to insert raw LaTeX code in your figure. After you have
+saved the above figure as an eps file, you can generate a pgf version using::
+
+    $ java -jar eps2pgf.jar plot.eps -m directcopy -o plot.pgf
+
+.. figure:: #eps2pgf2.png
+
+You can find the generated pgf code in the file `plot.pgf`_. Matlab users may also
+be interested in the script Mathfig2PGF_ written by eps2pgf's author. 
+
+The output from eps2pgf is low level pgf commands. This can make it a bit difficult to modify
+the generated code and to use higher level TikZ commands. The tool seems to be actively 
+developed, so I am sure that future version will offer tighter integration with TikZ. 
+
+.. _eps2pgf: http://sourceforge.net/projects/eps2pgf/
+.. _tiger.pgf: tiger.pgf
+.. _plot.pgf: plot.pgf
+.. _PSfrag: http://en.wikipedia.org/wiki/PSfrag
+.. _Paul Wagenaars: http://www.wagenaars.org/
+.. _Mathfig2PGF: http://www.mathworks.com/matlabcentral/fileexchange/loadFile.do?objectId=12962
+
+\end{comment}
+
+\begin{document}
+
+\input{tiger.pgf}
+% Excerpt from tiger.pgf:
+%% Created by Eps2pgf 0.6.0 (build on 2008-02-04) on Fri Apr 18 08:15:18 CEST 2008
+%\begin{pgfpicture}
+%\pgfpathmoveto{\pgfpoint{0.6cm}{6.033cm}}
+%\pgfpathlineto{\pgfpoint{20.002cm}{6.033cm}}
+%\pgfpathlineto{\pgfpoint{20.002cm}{26.07cm}}
+%\pgfpathlineto{\pgfpoint{0.6cm}{26.07cm}}
+%\pgfpathclose
+%\pgfusepath{clip}
+%\begin{pgfscope}
+%\definecolor{eps2pgf_color}{gray}{0.8}\pgfsetstrokecolor{eps2pgf_color}\pgfsetfillcolor{eps2pgf_color}
+%\pgfpathmoveto{\pgfpoint{0.6cm}{6.033cm}}
+%\pgfpathlineto{\pgfpoint{20.002cm}{6.033cm}}
+%\pgfpathlineto{\pgfpoint{20.002cm}{26.07cm}}
+%\pgfpathlineto{\pgfpoint{0.6cm}{26.07cm}}
+%\pgfpathclose
+%\pgfusepath{fill}
+% ...
+
+\input{plot.pgf}
+% Excerpt from plot.pgf
+% ...
+%\pgfpathlineto{\pgfpoint{14.967cm}{13.811cm}}
+%\pgfpathlineto{\pgfpoint{15.055cm}{14.749cm}}
+%\pgfusepath{stroke}
+%\end{pgfscope}
+%\pgftext[x=5.134cm,y=15.013cm,rotate=90]{$y$}
+%\pgftext[x=10.653cm,y=12.223cm,rotate=0]{$\theta$}
+%\pgftext[x=10.656cm,y=17.45cm,rotate=0]{$\sin\theta^2$}
+%\pgftext[base,left,x=8.02cm,y=14.896cm,rotate=0]{\LaTeX}
+%\pgfsetdash{}{0cm}
+%\pgfusepath{stroke}
+%\end{pgfscope}
+
+\end{document}
+
+

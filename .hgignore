@@ -1,0 +1,26 @@
+# use glob syntax.
+syntax: glob
+*.*.swp
+*.aux
+*.log
+*.bbl
+*.out
+*.pyc
+*.bak
+*.toc
+*.nav
+*.snm
+*.blg
+*.dvi
+*.pdf
+*.png
+*.idx
+*.ind
+*.nlo
+*.synctex.gz
+*.orig
+incoming/*
+*.table
+*.gnuplot
+Thumbs.db
+
