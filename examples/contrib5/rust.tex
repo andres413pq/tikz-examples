@@ -1,0 +1,77 @@
+% Rusting Iron
+% Author: Jason Waskiewicz
+\documentclass{article}
+%\usepackage[gray]{xcolor}
+\usepackage{tikz}
+\usepackage{verbatim}
+
+\begin{comment}
+:Title: Rusting Iron
+
+A "jazzy" picture of the stages of rust (presented for a high school level).
+Uncomment the extra line above to render it in black-and-white for my school's BW copier
+
+I randomly placed the dissolved ions in the illustration.
+
+This goes with a written description.
+\end{comment}
+
+\begin{document}
+
+
+\centering
+\begin{tikzpicture}[>=stealth]
+
+
+
+%Draw the iron atoms
+\foreach \x in {1,1.5,2,2.5,3,3.5,4,4.5,5,8}
+	\shadedraw [ball color=red] (\x,1,-0.5) circle (0.25cm);
+\foreach \x in {1.25,1.75,2.25,2.75,3.25,3.75,4.25,4.75,5.25,5.75,6.25,6.75,7.25,7.75}
+	\shadedraw [ball color=red] (\x,0.55,-0.5) circle (0.25cm);
+
+%Draw the iron electrons; this isn't totally realistic for illustrating Fe+3 ions
+\foreach \x in {1.25,1.75,2.25,2.75}
+	\shadedraw [ball color=black] (\x,1.25,-0.5) circle (0.1cm);
+\foreach \x in {1,1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,6.5,7,7.5,8}
+	\shadedraw [ball color=black] (\x,0.75,-0.5) circle (0.1cm);
+
+%Draw the O2 molecules
+\shadedraw [ball color=blue] (1.5,1.8,-0.5) circle (0.15cm);
+\shadedraw [ball color=blue] (1.6,2.0,-0.5) circle (0.15cm);
+
+\shadedraw [ball color=blue] (1.8,1.6,-0.5) circle (0.15cm);
+\shadedraw [ball color=blue] (2.05,1.6,-0.5) circle (0.15cm);
+
+%Draw the arrows showing the electrons going to the O2 molecules
+\draw (3.45,1.35) -- (3.75,2.25) [->,thick];
+\draw (3.95,1.35) -- (3.95,2.25) [->,thick];
+\draw (4.45,1.35) -- (4.35,1.85) [->,thick];
+\draw (4.95,1.35) -- (4.5,1.85) [->,thick];
+
+%Draw O-2 ions with (-) labels
+\shadedraw [ball color=blue] (3.75,2.4,-0.5) circle (0.15cm) node [above=3pt,right=2pt] {\small{2-}};
+\shadedraw [ball color=blue] (4.15,2.0,-0.5) circle (0.15cm) node [above=3pt,right=2pt] {\small{2-}};
+
+%Draw the dissolved Fe+3 ions and O-2 ions
+\shadedraw [ball color=red] (6.25,2.5,-0.5) circle (0.25cm) node [above=3pt,right=4pt] {\small{3+}};
+\shadedraw [ball color=red] (6.85,2.0,-0.5) circle (0.25cm) node [above=3pt,right=4pt] {\small{3+}};
+
+\shadedraw [ball color=blue] (6.95,1.5,-0.5) circle (0.15cm) node [above=3pt,right=2pt] {\small{2-}};
+\shadedraw [ball color=blue] (6.15,2.0,-0.5) circle (0.15cm) node [above=3pt,right=2pt] {\small{2-}};
+\shadedraw [ball color=blue] (7.05,2.5,-0.5) circle (0.15cm) node [above=3pt,right=2pt] {\small{2-}};
+
+%Draw the time arrows
+\draw (2.2,2.5) -- (3.35,2.5) [->,very thick];
+\draw (4.8,2.5) -- (6.15,2.5) [->,very thick];
+
+%Draw the water droplet
+\begin{scope}
+	\clip (1,1) rectangle(9,5);
+	\shadedraw[ball color=blue!20, opacity=0.4] (4.5,1,-0.5) circle (3.5cm);
+\end{scope}
+
+%\draw[help lines] (0,0) grid (10,10); %my little helper
+
+\end{tikzpicture}
+\end{document} 
