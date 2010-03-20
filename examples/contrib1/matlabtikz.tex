@@ -1,0 +1,115 @@
+\documentclass{article}
+%  Author:  Brian S. Marks
+%  Title:  scr.tex
+%  This latex file should be paired with the Matlab script scr.m, which 
+%  creates the included yl.tex file.  The Matlab script creates a set of 
+%  TikZ lines that create the figure of a circle circumscribed by a 
+%  regular triangle, circumscribed by a circle, circumscribed by a 
+%  square, etc.  
+
+\usepackage{tikz}
+
+%%%<
+\usepackage{verbatim}
+\usepackage[active,tightpage]{preview}
+\setlength\PreviewBorder{5pt}%
+%%%>
+
+\begin{comment}
+:Title: Circumscribed polygons and circles
+
+
+The figure is a unit circle, circumscribed by an equilateral triangle, 
+circumscribed by another circle, circumscribed by a square, circumscribed 
+by a circle, etc.  (Interestingly enough, the radius of the circle sequence
+converges, so it makes for a pretty picture.)  A Matlab script computes the 
+circle radii and the polygons' vertices and creates a set of TikZ lines in 
+a separate file for the rendering of the image.  Then a separate tex file is 
+used to include the created TikZ file.
+
+The Matlab script `src.m`_ used to generate the figure is:
+
+.. sourcecode:: matlab
+
+	%  This Matlab script creates a set of LaTeX lines to generate a picture in
+	%  TikZ.  The picture is a unit circle, circumscribed by an equilateral
+	%  triangle, circumscribed by a circle, circumscribed by a square, 
+	%  circumscribed by a circle, etc.  Here Matlab is used to generate the 
+	%  sizes of the figures and the locations of the vertices of the polygons,
+	%  while TikZ is used to render a beautiful image.  
+	
+	fo = fopen('yl.tikz','w');
+	
+	%  The initial circle's radius:
+	r1 = 1;
+	
+	%  These commands are used to render a plot in Matlab, just to check that
+	%  things are working correctly.  Uncomment if desired:
+	%
+	% t = linspace(0,2*pi,100);
+	% x1 = r1*cos(t); y1 = r1*sin(t);
+	% plot(x1,y1,'linewidth',1.5);
+	% hold on
+	% axis square; axis equal;
+	
+	fprintf(fo,'\\begin{tikzpicture}[scale=0.5]\n');
+	fprintf(fo,'\\draw (0,0) circle (1pt);\n');
+	fprintf(fo,'\\draw[blue] (0,0) circle (1);\n');
+	
+	
+	for n = 3:50
+	    %  Radius of the next circle:
+	    r2 = r1*sec(pi/n);
+	
+	    %  Angle between successive vertices of the polygon:
+	    dtheta1 = 2*pi/n;
+	
+	    %  (x,y) coordinates of the vertices of the polygon:
+	    px2 = r2*cos((0:n)*dtheta1);
+	    py2 = r2*sin((0:n)*dtheta1);
+	    
+	    %  Issue the plotting commands in TikZ:
+	    fprintf(fo,'\\draw[red] ');
+	    for j = 1:n
+	        fprintf(fo,'(%f,%f) -- ',px2(j),py2(j));
+	    end
+	    fprintf(fo,'cycle;\n');
+	
+	    %  More Matlab plotting commands, if desired:
+	    %    x1 = r2*cos(t); y1 = r2*sin(t);
+	    %    plot(x1,y1,'linewidth',1.5);
+	    
+	    %  Draw the next circle, and then iterate to the next polygon:
+	    fprintf(fo,'\\draw[blue] (0,0) circle (%f);\n',r2);
+	    r1 = r2;
+	end
+	
+	fprintf(fo,'\\end{tikzpicture}\n');
+	
+	fclose(fo);
+
+To compile the example you will need the files:
+
+- `yl.tikz`_
+- `src.m`_
+
+.. _yl.tikz: yl.tikz
+.. _src.m: scr.m
+
+\end{comment}
+
+\begin{document}
+\begin{preview}
+\begin{center}
+	\input{yl.tikz}
+\end{center}
+
+The radius of the innermost circle is 1.  It is circumscribed by an 
+equilateral triangle, which is circumscribed by a circle, and so forth.  
+The radius of the circle as the number of figures approaches $\infty$ is 
+\[
+  \prod_{n=3}^\infty \sec\left(\frac{\pi}{n}\right) \approx 8.7
+\]
+
+\end{preview}
+\end{document}
