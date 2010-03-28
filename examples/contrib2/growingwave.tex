@@ -1,0 +1,116 @@
+%Author: Nick Papior Andersen
+% A decoration of a path which evolves with time.
+% Settings is there such that you can change the
+% start amplitude, end amplitude and the wave length.
+% Furthermore you decide whether it should start as a cosine or sine wave.
+%
+% Of course the start size and end size can be switched which gives a decreasing wave.
+
+
+\documentclass{article}
+\usepackage{tikz}
+%%%<
+\usepackage{verbatim}
+\usepackage[active,tightpage]{preview}
+\PreviewEnvironment{tikzpicture}
+\setlength\PreviewBorder{5pt}%
+%%%>
+
+\begin{comment}
+:Title: Growing wave decoration
+
+A path decoration that evolves with time. Options are available for setting
+start amplitude, end amplitude and the wave length. Furthermore you an set whether it should 
+start as a cosine or sine wave. The start size and end size can be switched which gives a decreasing wave.
+
+\end{comment}
+
+\usetikzlibrary{decorations.pathreplacing}
+
+\def\pgfdecorationgrowthstart{1cm}
+\def\pgfdecorationgrowthend{3cm}
+\def\pgfdecorationgrowthwidth{2pt}
+\newif\ifpgfdecorationgrowthsine
+\newif\ifpgfdecorationgrowthcosine
+\pgfdecorationgrowthcosinefalse
+\pgfdecorationgrowthsinetrue
+\pgfkeys{
+    /pgf/decoration/.cd,
+    growth start size/.store in=\pgfdecorationgrowthstart,
+    growth end size/.store in=\pgfdecorationgrowthend,
+    growth wave length/.store in=\pgfdecorationgrowthwavelength,
+    growth sine/.code={\pgfdecorationgrowthsinetrue\pgfdecorationgrowthcosinefalse},
+    growth cosine/.code={\pgfdecorationgrowthsinefalse\pgfdecorationgrowthcosinetrue}
+}
+
+\def\pgfdecorationgrowthsteps{1} % To keep track of steps from ending
+
+\pgfdeclaredecoration{growth wave}{initial}%
+{
+    \state{initial}[width=0pt,next state=first] {%
+        \pgfpathlineto{\pgfqpoint{0pt}{0pt}}%
+        \pgfmathparse{(\pgfdecorationgrowthend-\pgfdecorationgrowthstart) * 2 %
+                *\pgfdecorationgrowthwavelength/\pgfdecoratedremainingdistance}%
+        \global\edef\pgfdecorationgrowth{\pgfmathresult}%
+        \global\edef\pgfdecorationgrowthsteps{0}%
+    }%
+    \state{first}[width=2*\pgfdecorationgrowthwavelength,next state=second] {%
+        \pgfmathparse{\pgfdecorationgrowthstart + \pgfdecorationgrowthsteps * \pgfdecorationgrowth }%
+        % The wave starts
+        \ifpgfdecorationgrowthsine%
+            \pgfpathsine{\pgfqpoint{\pgfdecorationgrowthwavelength}{\pgfmathresult pt}}%
+            \pgfpathcosine{\pgfqpoint{\pgfdecorationgrowthwavelength}{-\pgfmathresult pt}}%
+        \fi%
+        \ifpgfdecorationgrowthcosine%
+            \pgfpathsine{\pgfqpoint{\pgfdecorationgrowthwavelength}{-\pgfmathresult pt}}%
+            \pgfpathcosine{\pgfqpoint{\pgfdecorationgrowthwavelength}{\pgfmathresult pt}}%
+        \fi%
+        \pgfmathadd{\pgfdecorationgrowthsteps}{1}%
+        \global\edef\pgfdecorationgrowthsteps{\pgfmathresult}%  Redefine the steps counter, globally.
+    }
+
+    \state{second}[width=2*\pgfdecorationgrowthwavelength,next state=first] {%
+        \pgfmathparse{\pgfdecorationgrowthstart + \pgfdecorationgrowthsteps * \pgfdecorationgrowth }%
+        % The wave continues
+        \ifpgfdecorationgrowthsine%
+            \pgfpathsine{\pgfqpoint{\pgfdecorationgrowthwavelength}{-\pgfmathresult pt}}%
+            \pgfpathcosine{\pgfqpoint{\pgfdecorationgrowthwavelength}{\pgfmathresult pt}}%
+        \fi%
+        \ifpgfdecorationgrowthcosine%
+            \pgfpathsine{\pgfqpoint{\pgfdecorationgrowthwavelength}{\pgfmathresult pt}}%
+            \pgfpathcosine{\pgfqpoint{\pgfdecorationgrowthwavelength}{-\pgfmathresult pt}}%
+        \fi%
+        \pgfmathadd{\pgfdecorationgrowthsteps}{1}%
+        \global\edef\pgfdecorationgrowthsteps{\pgfmathresult}%  Redefine the steps counter, globally.
+    }
+    \state{final} {%
+        \pgfpathlineto{\pgfpointdecoratedpathlast}%
+    }%
+}
+\begin{document}
+
+\begin{tikzpicture}
+    \draw[decorate,decoration={growth wave, % Choose the decoration
+            growth start size=2pt,          % Sets the start amplitude of the wave
+            growth end size=1cm,            % Sets the end amplitude of the wave
+            growth wave length=3pt,         % Sets the wave length
+            growth sine}]                   % The wave starts as a sine
+                (0,0) -- (3,0);
+    \draw[decorate,decoration={growth wave,
+            growth start size=2pt,
+            growth end size=.5cm,
+            growth wave length=5pt,
+            growth cosine}] (0,-2) -- (3,-2);
+    \draw[decorate,decoration={growth wave,
+            growth start size=0pt,
+            growth end size=.5cm,
+            growth wave length=2pt,
+            growth cosine},fill,color=red] (0,-3) rectangle (3,-5);
+    \draw[decorate,decoration={growth wave,
+            growth start size=1cm,
+            growth end size=1pt,
+            growth wave length=2pt,
+            growth cosine},fill,color=red] (0,-7) -- (3,-6);
+\end{tikzpicture}
+
+\end{document} 
