@@ -1,4 +1,6 @@
-% Create a Bode plot using Papanicola Robert's package <bodegraph>
+%& -shell-escape
+% Create a Bode plot using Papanicola Robert's package bodegraph:
+% http://www.sciences-indus-cpge.apinc.org/Bode-Black-et-Nyquist-avec-Tikz
 % Author: Dazhi Jiang
 \documentclass[10pt]{article}
 %%%<
@@ -11,12 +13,14 @@
 
 \begin{comment}
 :Title: Bode plot
-:Tags: Bodegraph, PGF CVS, Signal Processing, Node positionning, Plotting
 :Author: Dazhi Jiang
- 
+:Tags: Bodegraph, PGF CVS, Signal Processing, Node positionning, Plotting
 
 This tikz example display two bode plots.
-It requires the bodegraph package.
+It requires the bodegraph_ package and GNUPLOT.
+
+.. _bodegraph: http://www.sciences-indus-cpge.apinc.org/Bode-Black-et-Nyquist-avec-Tikz
+
 \end{comment}
 
 \usepackage{amsmath,amssymb}
