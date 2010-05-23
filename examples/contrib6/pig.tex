@@ -1,0 +1,148 @@
+% Author M.R.C. van Dongen
+% Draw parameterised pig.
+% This code can/should be improved by using the pgfkey library.
+
+\documentclass{minimal}
+
+\usepackage{tikz}
+%%%<
+\usepackage{verbatim}
+\usepackage[active,tightpage]{preview}
+\PreviewEnvironment{tikzpicture}
+\setlength\PreviewBorder{5pt}%
+%%%>
+
+\begin{comment}
+:Title: Parameterised pig
+:Author: Marc van Dongen
+
+\end{comment}
+
+\usetikzlibrary{calc}
+\usepackage{keyval}
+
+\makeatletter
+
+% We're not using pgfkeys, and we've chosen to use keyval
+% for option parsing. The following define the keys for a
+% pig keyval family. The main purpose of the keys and
+% default values is that we want to be able to draw pigs
+% with predefined colours for certain parts and predefined
+% scaling factors for line thickness.
+
+\def\pig@draw@thick@width{0.85}
+\def\pig@draw@thin@width{0.20}
+\def\pig@label{pig label}
+\tikzset{draw thick/.style={draw=black,line width=0.85}}
+\tikzset{draw thin/.style={draw=black,line width=0.20}}
+\tikzset{fill colour/.style={fill=pink}}
+\tikzset{nose hole fill colour/.style={fill=purple!50!gray}}
+\tikzset{eye fill colour/.style={fill=white}}
+\tikzset{pupil fill colour/.style={fill=black}}
+
+\define@key{pig}{draw thick}{\def\draw@pig@thick@width{#1}}
+\define@key{pig}{draw thin}{\def\draw@pig@thin@width{#1}}
+\define@key{pig}{fill colour}{\tikzset{fill colour/.style={fill=#1}}}
+\define@key{pig}{nose hole fill colour}{\tikzset{nose hole fill colour/.style={fill=#1}}}
+\define@key{pig}{eye fill colour}{\tikzset{eye fill colour/.style={fill=#1}}}
+\define@key{pig}{pupil fill colour}{\tikzset{pupil fill colour/.style={fill=#1}}}
+\define@key{pig}{pig label}{\def\pig@label{#1}}
+\def\pig@scale{1}
+
+\def\pig{\@ifnextchar[\draw@pig{\draw@pig[]}}
+\def\draw@pig[#1]#2{%
+   % Set the relative line width for thick lines.
+   \def\draw@pig@thick@width{0.85}
+   % Set the relative line width for thin lines.
+   \def\draw@pig@thin@width{0.20}
+   % Set the relative scale of the pig.
+   \def\pig@scale{#2}
+   \setkeys{pig}{#1}
+   \begin{tikzpicture}[scale=#2,
+                       draw thick/.style={draw=black,line width=\draw@pig@thick@width*\pig@scale},
+                       draw thin/.style={draw=black,line width=\draw@pig@thin@width*\pig@scale}]
+   \path (0,0)            coordinate (\pig@label head)
+         + (-0.005,-0.20) coordinate (\pig@label nose)
+         + (-0.010,+0.05) coordinate (\pig@label body)
+         + (-0.010,+0.45) coordinate (\pig@label tail);
+   % Define points for tail.
+   \foreach \number/\point in {1/{+0.000,+0.055},%
+                               2/{-0.058,+0.075},%
+                               3/{+0.044,+0.094},%
+                               4/{-0.072,+0.137},%
+                               5/{+0.048,+0.170},%
+                               6/{-0.078,+0.206}} {
+       \path (\pig@label tail) +(\point) coordinate (tail \number);
+   }
+   % Define points for ears and legs.
+   \foreach \offset in {-1,1} {
+       \path (\pig@label head)
+                    ++ (+0.12*\offset,+0.00) coordinate (ear pt 1 \offset)
+                    +  (-0.04*\offset,+0.07) coordinate (ear pt 2 \offset)
+                    +  (-0.02*\offset,+0.25) coordinate (ear pt 3 \offset)
+                    +  (+0.11*\offset,+0.25) coordinate (ear pt 4 \offset)
+                    +  (+0.14*\offset,+0.13) coordinate (ear pt 5 \offset)
+                    +  (+0.09*\offset,-0.06) coordinate (ear pt 6 \offset)
+             (\pig@label head)
+                    ++ (+0.09*\offset,-0.30) coordinate (leg 1 \offset)
+                    ++ (+0.01*\offset,-0.24) coordinate (leg 2 \offset)
+                    ++ (+0.04*\offset,+0.08) coordinate (leg 3 \offset)
+                    ++ (+0.04*\offset,-0.08) coordinate (leg 4 \offset)
+                    ++ (+0.02*\offset,+0.30) coordinate (leg 5 \offset);
+   }
+   % draw legs.
+   \foreach \number in {-1,1} {
+      \filldraw[fill colour,draw thick]
+         (leg 1 \number) --
+         (leg 2 \number) --
+         (leg 3 \number) --
+         (leg 4 \number) --
+         (leg 5 \number) -- cycle;
+   }
+   % draw tail.
+   \draw[draw thick,line join=round,line cap=round]
+         (\pig@label tail) \foreach \num in {1,...,6} { -- (tail \num)};
+   % draw body.
+   \draw[fill colour,draw thick]
+         (\pig@label body) ellipse (4.50mm and 4.10mm);
+   % draw ears.
+   \foreach \number in {-1,1} {
+      % ears
+      \filldraw[fill colour,draw thick]
+         (ear pt 1 \number) .. controls
+         (ear pt 2 \number) and
+         (ear pt 3 \number) ..
+         (ear pt 4 \number) .. controls
+         (ear pt 5 \number) and
+         (ear pt 6 \number) .. (ear pt 1 \number);
+   }
+   % draw nose.
+   \filldraw[fill colour,draw thick]
+         (\pig@label head) ellipse (1.42mm and 1.40mm);
+   \foreach \offset in {-1,1} {
+       \filldraw[draw thin,eye fill colour]
+                (\pig@label head) ++ (-0.006,0.00) ++ (0.055*\offset,+0.03)
+                coordinate (eye \offset)
+                ellipse (0.04 and 0.060);
+       \fill[pupil fill colour]
+            (eye \offset) ellipse (0.020 and 0.035);
+   }
+   \filldraw[fill colour,draw thick]
+         (\pig@label nose) ellipse (2.60mm and 1.72mm);
+   % Draw nose holes
+   \foreach \offset in {-1,1} {
+       \filldraw[draw thick,nose hole fill colour]
+                (\pig@label nose) ++ (\offset*0.080,0)
+                 ellipse (0.50mm and 0.85mm);
+   }
+   \end{tikzpicture}
+}
+
+\makeatother
+
+\begin{document}
+\begin{tikzpicture}
+   \draw (0,0) node[anchor=south]{\pig{3}}
+         (4,0) node[anchor=south]{\pig[nose hole fill colour=purple!20,fill colour=blue!40]{5}};
+\end{tikzpicture}
+\end{document}
