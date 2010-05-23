@@ -23,4 +23,5 @@ incoming/*
 *.table
 *.gnuplot
 Thumbs.db
-
+*.data
+*.vrb
