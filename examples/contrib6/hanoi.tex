@@ -1,0 +1,179 @@
+
+% Author Martin Hofmann
+% Solving the Towers of Hanoi, semi-animated with beamer :-)
+
+\documentclass{beamer}
+
+\usepackage[utf8]{inputenc}
+\usepackage{scalefnt}
+\usepackage{xcolor}
+
+\hypersetup{pdfpagemode=FullScreen}
+
+% Beamer Settings
+\usetheme{Warsaw}
+
+% tikz imports
+\usepackage{tikz,pgffor,calc,color}
+\usetikzlibrary{shadows,patterns,shapes}
+
+\begin{document}
+
+% define some colors, i don't like plain green and brown
+\definecolor{darkgreen}{rgb}{0.2,0.55,0}
+\definecolor{darkbrown}{rgb}{0.375,0.25,0.125}
+
+% define a pole, it takes its position as x-coordinate as argument
+\newcommand{\pole}[1]{
+  \node [ fill=darkbrown, rectangle
+        , minimum width=3.5cm] at (#1,0.635) {} ;
+  \node [ fill=darkbrown, rectangle
+        , minimum width=0.25cm,minimum height=4cm] at (#1,2.6) {} ;
+}
+
+% define three poles
+\newcommand{\poles}[0]{\pole{\poleOne};\pole{\poleTwo};\pole{\poleThree};}
+
+% macros for the x positions. 
+%It is better to call them by a pole name, instead of a number.
+\newcommand{\poleOne}[0]{0}
+\newcommand{\poleTwo}[0]{4}
+\newcommand{\poleThree}[0]{8}
+
+% macros for the y positions
+% It's the same as fpr x positions
+\newcommand{\lvlOne}[0]{1.0}
+\newcommand{\lvlTwo}[0]{1.5}
+\newcommand{\lvlThree}[0]{2.0}
+\newcommand{\lvlFour}[0]{2.5}
+\newcommand{\lvlFive}[0]{3}
+
+% define a single disc, parameterised in its xpos, ypos, size, color, and
+% name
+\newcommand{\disc}[5]{
+  \node [shade, shading=radial, rounded rectangle, minimum height=0.5cm, 
+	 inner color=#4!20, outer color = #4!60!gray, minimum width = #3] 
+        at (#1,#2) {#5}
+}
+
+% colored discs in different sizes, parameterised in x- and y-coordinates
+\newcommand{\bdisc}[2]{\disc{#1}{#2}{3.5cm}{blue}{5}}
+\newcommand{\gdisc}[2]{\disc{#1}{#2}{3.0cm}{green}{4}}
+\newcommand{\rdisc}[2]{\disc{#1}{#2}{2.5cm}{red}{3}}
+\newcommand{\odisc}[2]{\disc{#1}{#2}{2.0cm}{orange}{2}}
+\newcommand{\ydisc}[2]{\disc{#1}{#2}{1.5cm}{yellow}{1}}
+
+% Now we can start with the problem.
+% Solving the tower with one disc is easy.
+\begin{frame}[fragile]{Tower of Hanoi -- 1 Disc}
+ 
+\begin{tikzpicture}
+ % draw the poles
+ \poles;
+ 
+ %move the discs by hiding and showing them on different overlays
+ \only<1> {\ydisc{\poleOne}{\lvlOne};}
+ \only<2->{\ydisc{\poleThree}{\lvlOne};}
+ 
+ % finish
+ \only<3> {\node[] at (4,3) {\Huge\scalefont{2}\color{darkgreen}OK};}
+\end{tikzpicture}
+
+\end{frame}
+
+
+% Still with two discs
+\begin{frame}[fragile]{Tower of Hanoi -- 2 Discs}
+ 
+\begin{tikzpicture}
+ \poles;
+ %move the discs by hiding and showing them on different overlays
+ \only<1-2>{\odisc{\poleOne}{\lvlOne};}
+ \only<3-> {\odisc{\poleThree}{\lvlOne};}
+ 
+ \only<1>  {\ydisc{\poleOne}{\lvlTwo};} 
+ \only<2-3>{\ydisc{\poleTwo}{\lvlOne};}
+ \only<4-> {\ydisc{\poleThree}{\lvlTwo};}
+ 
+ % done
+ \only<5>  {\node[] at (4,3) {\Huge\scalefont{2}\color{darkgreen}OK};}
+\end{tikzpicture}
+
+\end{frame}
+
+% Some more work doing it with three.
+\begin{frame}[fragile]{Tower of Hanoi -- 3 Discs}
+ 
+\begin{tikzpicture}
+ \poles;
+ \only<1-4>{\rdisc{\poleOne}{\lvlOne};}
+ \only<5-> {\rdisc{\poleThree}{\lvlOne};}
+ 
+ \only<1-2>{\odisc{\poleOne}{\lvlTwo};}
+ \only<3>  {\odisc{\poleTwo}{\lvlOne};}
+ \only<4-6>{\odisc{\poleTwo}{\lvlOne};}
+ \only<7-> {\odisc{\poleThree}{\lvlTwo};}
+ 
+ \only<1>  {\ydisc{\poleOne}{\lvlThree};} 
+ \only<2-3>{\ydisc{\poleThree}{\lvlOne};}
+ \only<4-5>{\ydisc{\poleTwo}{\lvlTwo};}
+ \only<6-7>{\ydisc{\poleOne}{\lvlOne};}
+ \only<8-> {\ydisc{\poleThree}{\lvlThree};}
+ 
+ \only<9>  {\node[] at (4,3) {\Huge\scalefont{2}\color{darkgreen}OK};}
+  
+\end{tikzpicture}
+
+\end{frame}
+
+% I'am getting bored
+\begin{frame}[fragile]{Tower of Hanoi -- 4 Discs}
+ 
+\begin{tikzpicture}
+ \poles;
+ 
+ \only<1-8>  {\gdisc{\poleOne}{\lvlOne};} 
+ \only<9->   {\gdisc{\poleThree}{\lvlOne};} 
+ 
+ \only<1-4>  {\rdisc{\poleOne}{\lvlTwo};}
+ \only<5-12> {\rdisc{\poleTwo}{\lvlOne};}
+ \only<13->  {\rdisc{\poleThree}{\lvlTwo};}
+ 
+ \only<1-2>  {\odisc{\poleOne}{\lvlThree};}
+ \only<3-6>  {\odisc{\poleThree}{\lvlOne};}
+ \only<7-10> {\odisc{\poleTwo}{\lvlTwo};}
+ \only<11-14>{\odisc{\poleOne}{\lvlOne};}
+ \only<15->  {\odisc{\poleThree}{\lvlThree};}
+ 
+ \only<1>    {\ydisc{\poleOne}{\lvlFour};} 
+ \only<2-3>  {\ydisc{\poleTwo}{\lvlOne};} 
+ \only<4-5>  {\ydisc{\poleThree}{\lvlTwo};} 
+ \only<6-7>  {\ydisc{\poleOne}{\lvlTwo};} 
+ \only<8-9>  {\ydisc{\poleTwo}{\lvlThree};} 
+ \only<10-11>{\ydisc{\poleThree}{\lvlTwo};} 
+ \only<12-13>{\ydisc{\poleOne}{\lvlTwo};} 
+ \only<14-15>{\ydisc{\poleTwo}{\lvlOne};} 
+ \only<16->  {\ydisc{\poleThree}{\lvlFour};} 
+ 
+ \only<17>  {\node[] at (4,3) {\Huge\scalefont{2}\color{darkgreen}OK};}
+  
+\end{tikzpicture}
+
+\end{frame}
+
+%I stop it
+\begin{frame}[fragile]{Tower of Hanoi -- 5 Discs}
+
+\begin{tikzpicture}
+ \poles;
+ \bdisc{\poleOne}{\lvlOne};
+ \gdisc{\poleOne}{\lvlTwo};
+ \rdisc{\poleOne}{\lvlThree};
+ \odisc{\poleOne}{\lvlFour};
+ \ydisc{\poleOne}{\lvlFive};
+ \node[cloud, draw, fill=gray!20, aspect=2] at (4,3) {\Huge\scalefont{2}?};
+\end{tikzpicture}
+
+\end{frame}
+
+\end{document}
