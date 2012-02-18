@@ -1,0 +1,189 @@
+% Animated Wankel-Motor
+% Author: Robert Papanicola
+\documentclass{article} 
+\usepackage{tikz}
+%%%<
+\usepackage{verbatim}
+\usepackage[active,tightpage]{preview}
+\setlength\PreviewBorder{5pt}%
+%%%>
+\begin{comment}
+:Title: Animated Wankel-Motor
+:Tags: Animations;Physics
+:Author: Robert Papanicola
+:Slug: wankel-motor
+
+From Wikipedia: The Wankel engine is a type of internal combustion engine
+using an eccentric rotary design to convert pressure into a rotating motion
+instead of using reciprocating pistons. Its four-stroke cycle takes place in
+a space between the inside of an oval-like epitrochoid-shaped housing and
+a rotor that is similar in shape to a Reuleaux triangle but with sides that
+are somewhat flatter. The very compact Wankel engine delivers smooth
+high-rpm power. It is commonly called a rotary engine, though this name
+applies also to other completely different designs. It is the only internal
+combustion engine invented in the twentieth century to go into production.
+\end{comment}%\usepackage{pgfmath}
+\usetikzlibrary{calc}
+\usepackage{animate}
+\usepackage{fp} %[fr] utile pour les calculs de position des différentes phases du moteur
+% [fr] mais inutile pour la simulation seule
+% Useful for calculating the position of the different phases of the motor but useless for simulation only
+
+\newcommand{\Wankel}[1]{
+% \def\itheta{#1}
+\FPabs{\itheta}{#1}
+% définition des données \ data definition
+\def\OA{0.4}
+\def\OB{0.8}
+\def\AE{4}
+% \def\seuil{500}
+% \def\couleur{20}
+
+%==========
+% [fr] définition des paramètres angulaires du rotor en fonction des phases du moteur 
+% definition of angular parameters of the rotor according to the motor phases
+\def\Comp{0}
+\def\Expl{360}
+\def\Det{375}
+\def\Ech{660}
+\def\Asp{870}
+\def\decalage{125} 
+% [fr] décalage de l'origine pour positionner le rotor au début de la compression à l'instant t=0
+% [en] shift the origin to position the rotor at the start of compression at time t = 0
+\begin{tikzpicture}
+%===== [fr] Définition de quelques couleurs pales\ [en]  some color
+\colorlet{vertclair}{green!25}
+\colorlet{grisclair}{gray!60}
+\colorlet{rougepale}{red!60}
+
+% [fr] Début des test nécessaire pour colorer la chambre
+% test needed to color the combustion chamber
+\FPabs{\val}{\itheta} 
+% [fr] FPiflt et les autres tests de FP ne permettent pas de faire des
+% [fr] tests inclus dans des tests. Le premier test est donc toujours vrai,
+% [fr] le style chambre1 sera donc affecté avec [{vertclair!\pos!orange}]
+% [fr] mais ne sera affiché que si aucun des tests suivants n'est vrai.
+% FPiflt and other FP tests do not do tests included in the tests. The first
+% test is always true, the style will be affected with chambre1
+% [{vertclair! \ Pos! Orange}] but will not be displayed if any of the
+% following tests is true.
+\FPiflt{\val}{1080}
+\FPeval{\pos}{(\val-1080)/(\Ech-1080)*100} 
+\tikzstyle{chambre1}=[{vertclair!\pos!orange}]% aspiration
+% \tikzstyle{chambre2}=[ ball color={gray!\pos!red}]% détente}
+% \tikzstyle{chambre3}=[ ball color={orange!\pos!green}]% aspiration
+\def\texte{Aspiration}
+\fi
+
+% [fr] echappement / Second test, Exhaust
+\FPiflt{\val}{\Asp}
+\FPeval{\pos}{(\val-\Ech)/(\Asp-\Ech)*100} 
+\tikzstyle{chambre1}=[{vertclair!\pos!grisclair}]%echappement
+% \tikzstyle{chambre2}=[ ball color={gray!\pos!red}]% détente}
+% \tikzstyle{chambre3}=[ ball color={orange!\pos!green}]%aspiration
+\def\texte{Echappement}
+\fi
+
+% [fr] troisième test - détente  /  Third test - relaxation
+
+\FPiflt{\val}{\Ech}
+\FPeval{\pos}{(\val-\Det)/(\Ech-\Det)*100} 
+\tikzstyle{chambre1}=[ {grisclair!\pos!rougepale}]%détente}
+% \tikzstyle{chambre2}=[ ball color={gray!\pos!red}]%compression
+% \tikzstyle{chambre3}=[ ball color={orange!\pos!green}]%aspiration
+\def\texte{Detente}
+\fi
+
+% [fr] quatrième test - explosion /  Fourth test - explosion
+\FPiflt{\val}{\Det}
+\FPeval{\pos}{(\val-\Expl)/(\Det-\Expl)*100} 
+\tikzstyle{chambre1}=[ {rougepale!\pos!red}]%Explosion
+% \tikzstyle{chambre2}=[ ball color={gray!\pos!red}]%détente}
+% \tikzstyle{chambre3}=[ ball color={orange!\pos!green}]%aspiration
+\def\texte{Explosion}
+\fi
+
+% [fr] cinquième test / Fifth test - aspiration
+\FPiflt{\val}{\Expl}
+\FPeval{\pos}{(\val-\Comp)/(\Expl-\Comp)*100} 
+\tikzstyle{chambre1}=[ {red!\pos!orange}]%compression
+% \tikzstyle{chambre2}=[ ball color={gray!\pos!red}]%détente}
+% \tikzstyle{chambre3}=[ ball color={orange!\pos!green}]%aspiration
+\def\texte{Compression}
+\fi
+
+\FPtrunc{\pos}{\pos}{0}
+
+% [fr] Ajout du décalage pour dessiner le rotor en position initiale
+% [en] Adding the offset to draw the rotor in the first position
+\FPeval{\itheta}{0-(\decalage+\itheta)}
+
+% [fr] début du dessin 
+\draw (-5,-4.5) rectangle (5,4.5); %cadre pour imposer les dimensions du dessin
+
+%[fr}dessin du stator / drawing of the stator
+\begin{scope}% stator
+  \coordinate (A) at (\itheta:\OA);  %[fr] Le point A tourne autour de O
+  % [fr] avec l'angle itheta
+  % [en]Point A turns around point O the angle with itheta
+  \coordinate (O) at (0,0);% Origine
+
+  \filldraw[thick,black,domain=0:1080,smooth,variable=\t,fill=gray,samples=50]
+  plot ({.4*cos(\t)+4*cos(.333333*\t)},{.4*sin(\t)+4*sin(.333333*\t)})
+  plot ({.42*cos(-\t)+4.2*cos(-.333333*\t)},{.42*sin(-\t)+4.2*sin(-.333333*\t)});
+  \fill[white](0.3,3) rectangle (0.5,4); % dessin des soupapes
+      % (admission echappement) 
+  \fill[white](-0.3,3) rectangle (-0.5,4);
+  \filldraw[red](-0.4,-3.5) rectangle (-0.5,-3.7);% Bougie
+
+  % [fr]Coloriage des chambres en fonction de la phase de fonctionnement,
+  % [fr]le rotor sera dessine par dessus et masquera le surplus
+  % [fr](le bord intérieur est linéaire et non incurvé).
+  % Coloring of the rooms according to the operating phase, the rotor will be
+  % plotted on top and hide the rest (the inner edge is straight, not curved).
+  % Chambre 1
+  \fill[thick,black,domain=-1*(\itheta):-1*(\itheta+360),smooth,variable=\t,
+    chambre1] plot ({.4*cos(-\t)+4*cos(-.333333*\t)},
+    {.4*sin(-\t)+4*sin(-.333333*\t)});
+
+  % affichage des paramètres
+  % \FPtrunc{\itheta}{\itheta}{0}
+  % \FPtrunc{\val}{\val}{0}
+  % \node at (0,6){$\theta$=\itheta,pos=\pos,val=\val};
+
+  \draw[black](O) circle (\OB); %Dessin du pignon fixe
+  \draw(O) -- (A);
+\end{scope}
+
+% [fr] Dessin du rotor / Draw the rotor
+\begin{scope}[shift={(A)},rotate={\itheta}] % le repere est tourné de itheta
+  % [fr] les trois points, C, D, E sont définis en polaire dans ce repère
+  % [en] the three points, C, D, E are defined in the polar reference
+  \coordinate (E) at ({-\itheta*\OB/(\OB+\OA)}:\AE); 
+  \coordinate (C) at ({-\itheta*\OB/(\OB+\OA)+120}:\AE);
+  \coordinate (D) at ({-\itheta*\OB/(\OB+\OA)+240}:\AE);
+  \draw[red](A) -- (E);
+  \filldraw [bend left=29.5,red,fill=red!50] (A) circle (\OA+\OB)% dessin et coloriage du rotor
+    (E) to (D) to (C) to (E);
+\end{scope}
+
+\node at (0,-4) {\texte};  % le texte affiche la phase de fonctionnement
+\end{tikzpicture}
+}
+
+\begin{document}
+\begin{preview}
+% [fr] Animation avec le package animate
+% Animation with the animate package
+\begin{animateinline}[controls,loop]{12}
+  \multiframe{72}{ixb=0+15}{
+    \Wankel{\ixb}}
+\end{animateinline}
+\vfill
+%{fr] Pour dessiner le rotor dans un position particulière
+% To draw the rotor in a particular position
+\begin{center}
+  \Wankel{200}
+\end{center}
+\end{preview}
+\end{document}
