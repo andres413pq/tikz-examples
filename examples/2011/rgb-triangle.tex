@@ -1,0 +1,28 @@
+% Author: Andrew Stacey
+% http://tex.stackexchange.com/questions/14613
+% A triangle with red, blue and green corners and weighted color within
+% Based on fadings
+\documentclass{article}
+\usepackage{tikz}
+%%%<
+\usepackage{verbatim}
+\usepackage[active,tightpage]{preview}
+\usepackage{subfig}
+\PreviewEnvironment{tikzpicture}
+\setlength\PreviewBorder{5pt}%
+%%%>
+\begin{comment}
+:Title: RGB triangle
+:Tags: Fadings; Color manipulation
+:Author: Andrew Stacey
+:Slug: rgb-triangle
+\end{comment}
+\usetikzlibrary{fadings}
+\pagestyle{empty}
+\begin{document}
+\begin{tikzpicture}
+  \fill[green] (90:4) -- (210:4) -- (-30:4) -- cycle;
+  \fill[blue,path fading=west] (90:4) -- (210:4) -- (-30:4) -- cycle;
+  \fill[red,path fading=south] (90:4) -- (210:4) -- (-30:4) -- cycle;
+\end{tikzpicture}
+\end{document}
