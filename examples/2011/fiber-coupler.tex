@@ -1,0 +1,60 @@
+% Schematic of Wavelength Division Multiplexer (Optical Fiber Coupler)
+% Author: Jimi Oke
+\documentclass{article}
+\usepackage{tikz}
+%%%<
+\usepackage{verbatim}
+\usepackage[active,tightpage]{preview}
+\PreviewEnvironment{tikzpicture}
+\setlength\PreviewBorder{5pt}%
+%%%>
+\begin{comment}
+:Title: Schematic of Wavelength Division Multiplexer (Optical Fiber Coupler)
+:Tags: Styles; To paths
+:Author: Jimi Oke
+:Slug: fiber-coupler
+
+From Wikipedia: A Fiber optic coupler is a device used in optical fiber systems with one or more input fibers and one or several output fibers. Light entering an input fiber can appear at one or more outputs and its power distribution potentially depending on the Wavelength and polarization.
+
+There are couplers which can combine two inputs at different wavelengths into one output. Wavelength-sensitive couplers are used as multiplexers in wavelength-division multiplexing (WDM) telecom systems to combine several input channels with different wavelengths, or to separate channels.
+\end{comment}
+\usepackage{textcomp}
+\begin{document}
+\begin{tikzpicture}[
+  box/.style={top color=black!30!blue!5, bottom color=black!30,
+  middle color=white},
+  media/.style={font={\footnotesize}},
+  whitetail/.style={very thick, yellow!8!white},
+  bluetail/.style={very thick, blue!90},
+  orangetail/.style={very thick, orange!90!black}]
+
+% frame
+\fill[gray!50,rounded corners] (-5,-2) rectangle (7.5,2);
+
+% coupler box
+\draw[thick, rounded corners] (0,-.3) rectangle (2.5,.3);
+\filldraw[rounded corners, box] (0,-.3) rectangle (2.5,.3);
+
+% fiber leads
+\draw[bluetail] (-4,1) to[out=-30,in=180] (0,.08);
+\draw[whitetail] (-4,-1) to[out=30,in=180] (0,-.08);
+
+\draw[very thick, gray] (0,.08) -- (2.5, .08);
+\draw[very thick, gray] (0,-.08) -- (2.5, -.08);
+
+\draw[orangetail] (2.5,.08) to[out=0,in=210] (6.5,1);
+\draw[whitetail] (2.5,-.08) to[out=0,in=150] (6.5,-1);
+
+% labels
+\path[media,fill=white,draw=black] (-4.4,-1.2) node {O2}
+             (-4.4, 1.2) node {O1}
+             ( 6.9,-1.2) node {I2}
+             ( 6.9, 1.2) node {I1};
+
+\node[media,right] at (2,-3)   {I1: In from gain medium};
+\node[media,right] at (2,-3.5) {I2: Out to wattmeter for monitoring};
+\node[media,right] at (-5,-3) {O1: Connects to Faraday isolator};
+\node[media,right] at(-5,-3.5) {O2: Nd:YAG pump input (1.06 \textmu m)};
+\end{tikzpicture}
+\end{document} 
+
