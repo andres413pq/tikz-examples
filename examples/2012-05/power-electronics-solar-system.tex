@@ -1,4 +1,5 @@
-% Power electronics---the schematic diagram of a solar system connected to the grid.
+% Power electronics---the schematic diagram of a solar system
+% connected to the grid.
 % Author: Ali Mehrizi-Sani
 \documentclass{standalone}
 
@@ -39,8 +40,11 @@
     \coordinate (InverterP) at (8,0);
 
     % Place blocks
-    \begin{scope}[every node/.style={draw,ultra thick, fill=AleeRed!30, rectangle,text width=1.5cm, minimum height=2cm, text badly centered}]
-        \node[name=pv,pattern=grid,pattern color=AleeRed!30] at (SolarCellP) {\bfseries Solar Panel};
+    \begin{scope}[every node/.style={draw,ultra thick, fill=AleeRed!30,
+        rectangle,text width=1.5cm, minimum height=2cm,
+        text badly centered}]
+        \node[name=pv,pattern=grid,pattern color=AleeRed!30]
+          at (SolarCellP) {\bfseries Solar Panel};
         \node[name=chopper] at (ChopperP) {DC-DC};
         \node[name=inverter] at (InverterP) {DC-AC};
     \end{scope}
@@ -52,7 +56,8 @@
     % DC link and cap
         (chopper.30) -- (inverter.150)
         (chopper.330) -- (inverter.210)
-        ($(chopper.330)!0.4!(inverter.210)$) to[battery, l=\SI{60}{\volt}, mirror] ($(chopper.30)!0.4!(inverter.150)$)
+        ($(chopper.330)!0.4!(inverter.210)$) to[battery, l=\SI{60}{\volt},
+          mirror] ($(chopper.30)!0.4!(inverter.150)$)
     % AC side
         (inverter.30)
         to[short] ++(1,0)
