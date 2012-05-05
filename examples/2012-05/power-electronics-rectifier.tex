@@ -1,4 +1,5 @@
-% Power electronics---a controlled full-wave rectifier and it's output voltage and current waveforms.
+% Power electronics---a controlled full-wave rectifier and
+% it's output voltage and current waveforms.
 % The delay angle \alpha is customizable. 
 % Author: Ali Mehrizi-Sani
 \documentclass[landscape]{article}
@@ -67,14 +68,16 @@
 
 \bigskip
 
-\begin{tikzpicture}  % Example 4-7, p. 135 of Hart, discontinuous current in full-wave rect
+% Example 4-7, p. 135 of Hart, discontinuous current in full-wave rect
+\begin{tikzpicture}
 \begin{scope}[xscale=1,yscale=1.5]
     \newcommand{\alphaa}{60 * pi / 180}
     \newcommand{\betaa}{216 * pi / 180}
 
     \draw[thin, ->] (-0.2, 0) -- (14,0) node[right] {$\omega t$};
 
-    \foreach \x/\xtext in {0,{\alphaa}/\alpha,{pi}/\pi,{\betaa}/~,{2*pi}/{2\pi},{3*pi}/{3\pi}}
+    \foreach \x/\xtext in {0,{\alphaa}/\alpha,{pi}/\pi,
+      {\betaa}/~,{2*pi}/{2\pi},{3*pi}/{3\pi}}
         \draw (\x,0.1) -- (\x,-0.1) node [below] {$\xtext$};
     \draw (\betaa,-0.1) -- (\betaa,0.1) node [above] {$\beta$};
 
@@ -88,7 +91,8 @@
     % Vo and Io
     \foreach \qq [evaluate=\qq as \qqshft using \qq*pi] in {0,...,3}
     {
-    \begin{scope}[xshift=\qqshft cm,every path/.style={ultra thick, color=AleeRed}]
+    \begin{scope}[xshift=\qqshft cm,
+        every path/.style={ultra thick, color=AleeRed}]
         % Vo
          \draw[domain=0:{\betaa-pi}]
              plot (\x,{-sin(\x r)})
@@ -99,7 +103,8 @@
          % Io
          \draw
          [domain=\alphaa:\betaa,color=blue,thick]
-             plot (\x,{0.05 * (13.6*sin((\x - 0.646)*180/pi) - 21.2*exp(-\x/0.754))});
+             plot (\x,{0.05 * (13.6*sin((\x - 0.646)*180/pi)
+               - 21.2*exp(-\x/0.754))});
     \end{scope}
     }
     \node[right,color=AleeRed] at ({pi/2+pi/12},1.05) {$v_o$};
