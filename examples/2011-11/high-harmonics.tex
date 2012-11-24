@@ -1,0 +1,39 @@
+% High harmonics
+% Author: Fawad Karimi
+\documentclass{article}
+\usepackage{tikz}
+%%%<
+\usepackage{verbatim}
+\usepackage[active,tightpage]{preview}
+\PreviewEnvironment{tikzpicture}
+\setlength{\PreviewBorder}{10pt}%
+%%%>
+\begin{comment}
+:Title: High harmonics
+:Tags: Fadings;Physics
+:Author: Fawad Karimi
+:Slug: high-harmonics
+\end{comment}
+\usetikzlibrary{fadings}
+\renewcommand*{\familydefault}{\sfdefault}
+\begin{document}
+\begin{tikzpicture}
+	%------------------fundamental and harmonics
+   \fill[red,path fading=east] (0:0) -- (10:6) -- (-10:6) -- cycle;
+   \fill[red,path fading=west] (0:0) -- (-10:-6) -- (10:-6) -- cycle;
+   \fill[blue!70!,path fading=east] (0:0) -- (3:6) -- (-3:6) -- cycle;
+
+    %-----------captions
+    [above]{bla}
+    \draw (2.5,0)node[right] {\small higher harmonics:xuv--soft x-ray } ;
+  	\draw (-5.5,0.5)node[right] {\small pump laser} ;
+  	\draw (-5.5,0)node[right]{\small fs pulsed laser:vis--nir};
+    \node [below] at (0,-0.5) {gas cell filled with inert gas} ;
+    %	\node [above] at (0, 0.5)
+   %----------transparent gas cell
+    \begin{scope}[fill opacity = 0.4]
+    \draw[gray!25,fill=gray!10] (-1.5,0.5) rectangle +(3,-1);
+  \end{scope} 
+\end{tikzpicture}
+
+\end{document}
