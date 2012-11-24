@@ -1,0 +1,58 @@
+\documentclass{article}
+\usepackage{tikz}
+%%%<
+\usepackage{verbatim}
+\usepackage[active,tightpage]{preview}
+\PreviewEnvironment{tikzpicture}
+\setlength{\PreviewBorder}{10pt}%
+%%%>
+\begin{comment}
+:Title: Biconcave lens
+:Tags: Intersections;Optics
+:Author: Alain Matthes
+:Slug: biconcave-lens
+
+The example is made with the "intersections" library.
+We fill directly the center part. We need to determine the angle defined
+by the center I of an arc and a point of the arc (here D).
+
+Originally posted to [TeX.SE](http://tex.stackexchange.com/a/62919/213).
+\end{comment}
+\usetikzlibrary{intersections}
+
+\begin{document}
+\begin{tikzpicture}
+  \coordinate (I)  at (1.9,0);     
+  \path [name path=arc1, draw=none](-1.9,-1.5) 
+     arc[start angle=-90, end angle=90,radius=1.5];
+  \path [name path=arc2, draw=none](1.9,1.5)   
+     arc[start angle=90, end angle=270,radius=1.5];
+  \path [name path=rect, draw=none](-0.9,-0.9) rectangle (0.9,0.9);
+
+  \path [name intersections={of = arc1 and rect}];
+  \coordinate (A)  at (intersection-1);
+  \coordinate (B)  at (intersection-2);
+
+  \path [name intersections={of = arc2 and rect}];
+  \coordinate (C)  at (intersection-1);
+  \coordinate (D)  at (intersection-2);
+
+  \pgfmathanglebetweenpoints{\pgfpointanchor{I}{center}}{%
+    \pgfpointanchor{D}{center}} 
+  \let\tmpan\pgfmathresult 
+
+  \fill[red!50] (A)--(D)  
+        arc[start angle=\tmpan, end angle=360-\tmpan,radius=1.5] -- (B)
+        arc[start angle=\tmpan-180, end angle=180-\tmpan,radius=1.5] ; 
+
+  \draw [brown, ultra thick] (A) -- (D);
+  \draw [brown, ultra thick] (B) -- (C) ;
+  \draw [blue, thick] (-1.9,-1.5) arc[start angle=-90, end angle=90,radius=1.5];
+  \draw [blue, thick] (1.9,1.5) arc[start angle=90, end angle=270,radius=1.5];
+
+  \begin{scope}[>=latex]
+    \draw [->] (-3,0) -- (3,0);
+    \draw [->] (0,-1.25) -- (0,1.5);
+  \end{scope}
+\end{tikzpicture}
+\end{document} 
