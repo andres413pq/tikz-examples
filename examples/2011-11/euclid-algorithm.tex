@@ -1,0 +1,119 @@
+% Scheme of Greatest Common Divisor
+% Author: Giuseppe (joematara@hotmail.com)
+\documentclass{article}
+\usepackage{tikz}	
+%%%<
+\usepackage{verbatim}
+\usepackage[active,tightpage]{preview}
+\PreviewEnvironment{tikzpicture}
+\setlength{\PreviewBorder}{10pt}%
+%%%>
+\begin{comment}
+:Title: Scheme of Greatest Common Divisor (GCD)
+:Tags: Mathematics
+:Author: Giuseppe
+:Slug: euclid-algorithm
+
+Scheme of Greatest Common Divisor (GCD)
+performed through the Euclidean Algorithm
+and suitable to carry out manual calculations by
+following the coloured arrows:
+
+* inclined arrows stand for division operations
+* horizontal ones for multiplication 
+* vertical for subtraction 
+
+Basically such items are the well known procedure of  
+pupils at elementary schools. 
+
+Remarks: code lines from 'Fill numbers' to the end  
+         are written only for example purpose            
+         and should be erased prior to print the scheme.
+\end{comment}
+\begin{document}
+\begin{tikzpicture}[set style={{help lines}+=[dashed]}]
+\draw[style=help lines] (0,0) grid +(12,12);
+\draw                   (4,11) grid +(1,1);
+\draw                   (6,10) grid +(1,1);
+\draw                   (4,10) grid +(1,1); 
+%-----
+\draw                   (4,9) grid +(1,1);
+\draw                   (6,9) grid +(1,1);
+%-----
+\draw                   (6,8) grid +(1,1);
+\draw                   (4,8) grid +(1,1);
+%
+\draw                   (4,7) grid +(1,1);
+\draw                   (6,7) grid +(1,1);
+%
+\draw                   (6,6) grid +(1,1);
+\draw                   (4,6) grid +(1,1);
+%
+\draw                   (4,5) grid +(1,1);
+\draw                   (6,5) grid +(1,1);
+%
+\draw                   (6,4) grid +(1,1);
+\draw                   (4,4) grid +(1,1);
+%
+\draw                   (4,3) grid +(1,1);
+\draw                   (6,3) grid +(1,1);
+
+%------------------------------------------------------
+% red1
+\draw   [red,very thick,->]   (5,11.2) -- (6,10.8);
+  \draw   [red,thick, ->]   (5.25,10.5) -- (5,10.5); 
+  \draw   [red,thick, ->]   (6,10.5) -- (5.75,10.5);
+\draw   (5.5,10.5) circle (0.2);
+  \draw   [red,thick, ->]   (4.5,10.2) -- (4.5,9.8);
+% blue1
+\draw   [blue,very thick,->]   (6,10.2) -- (5,9.8);
+  \draw   [blue,thick,->]   (5.75,9.5) -- (6,9.5); 
+  \draw   [blue,thick,->]   (5,9.5) -- (5.25,9.5);
+\draw   (5.5,9.5) circle (0.2); 
+  \draw   [blue,thick, ->]   (6.5,9.2) -- (6.5,8.8);
+%-----------------  
+% red2
+\draw   [red,very thick,->]   (5,9.2) -- (6,8.8);
+  \draw   [red,thick, ->]   (5.25,8.5) -- (5,8.5); 
+  \draw   [red,thick, ->]   (6,8.5) -- (5.75,8.5);
+\draw   (5.5,8.5) circle (0.2);
+  \draw   [red,thick, ->]   (4.5,8.2) -- (4.5,7.8);
+% blue2
+\draw   [blue,very thick,->]   (6,8.2) -- (5,7.8);
+  \draw   [blue,thick,->]   (5.75,7.5) -- (6,7.5); 
+  \draw   [blue,thick,->]   (5,7.5) -- (5.25,7.5);
+\draw   (5.5,7.5) circle (0.2); 
+  \draw   [blue,thick, ->]   (6.5,7.2) -- (6.5,6.8);
+%-----------------  
+% red3
+\draw   [red,very thick,->]   (5,7.2) -- (6,6.8);
+  \draw   [red,thick, ->]   (5.25,6.5) -- (5,6.5); 
+  \draw   [red,thick, ->]   (6,6.5) -- (5.75,6.5);
+\draw   (5.5,6.5) circle (0.2);
+  \draw   [red,thick, ->]   (4.5,6.2) -- (4.5,5.8);
+
+% -------- Fill numbers -----------
+\node  at  (4.5,11.5) {2993};
+\node  at  (6.5,10.5) {1095};
+\node  at  (5.5,10.5) {2};  
+\node  at  (4.5,10.5) {2190}; 
+%---
+\node  at  (6.5,9.5) {803}; 
+\node  at  (5.5,9.5) {1}; 
+\node  at  (4.5,9.5) {803};
+%---
+\node  at  (6.5,8.5) {292};
+\node  at  (5.5,8.5) {2}; 
+\node  at  (4.5,8.5) {584};
+%
+\node  at  (4.5,7.5) {219};
+\node  at  (5.5,7.5) {1};
+\node  at  (6.5,7.5) {219};
+%---
+\node  at  (6.5,6.5) {73};
+\node  at  (5.5,6.5) {3};
+\node  at  (4.5,6.5) {219};
+%
+\node  at  (4.5,5.5) {0};
+\end{tikzpicture}
+\end{document}
