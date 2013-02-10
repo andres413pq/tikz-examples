@@ -1,0 +1,142 @@
+\documentclass[x11names]{article}
+\usepackage[width=16cm]{geometry}
+\usepackage{tikz}
+\usetikzlibrary{calc,positioning,shadows,decorations,decorations.pathmorphing,
+   hobby,shapes.geometric}
+
+% original code by percusse:
+% http://tex.stackexchange.com/questions/39296/simulating-hand-drawn-lines#49961
+\makeatletter
+\pgfdeclaredecoration{penciline}{initial}{
+    \state{initial}[width=+\pgfdecoratedinputsegmentremainingdistance,auto corner on length=3mm,]{
+        \pgfpathcurveto%
+        {% From
+            \pgfqpoint{\pgfdecoratedinputsegmentremainingdistance}
+                            {\pgfdecorationsegmentamplitude}
+        }
+        {%  Control 1
+        \pgfmathrand
+        \pgfpointadd{\pgfqpoint{\pgfdecoratedinputsegmentremainingdistance}{0pt}}
+                        {\pgfqpoint{-\pgfdecorationsegmentaspect\pgfdecoratedinputsegmentremainingdistance}%
+                                        {\pgfmathresult\pgfdecorationsegmentamplitude}
+                        }
+        }
+        {%TO 
+        \pgfpointadd{\pgfpointdecoratedinputsegmentlast}{\pgfpoint{1pt}{1pt}}
+        }
+    }
+    \state{final}{}
+}
+\makeatother
+
+\tikzset{candle decoration/.style={decorate, decoration={random steps,segment length=2pt,amplitude=0.3pt}}}
+\tikzset{candle shadow/.style={drop shadow={shadow xshift=.4ex,shadow yshift=-.3ex}}}
+\tikzset{stick candle/.style={
+            draw,decorate, decoration={penciline,amplitude=3pt},rectangle, 
+            anchor=north, minimum width=0.5cm, minimum height=#1,
+            left color=white, right color=Honeydew2!80
+            },
+            stick candle/.default={2cm}
+}
+
+\tikzset{candle support style/.style={
+            draw,rectangle, 
+            decorate, decoration={penciline,amplitude=1.5pt},
+            anchor=north, minimum width=0.9cm, minimum height=0.2cm,
+            left color=Goldenrod1!40, right color=Goldenrod2,
+            candle shadow
+            },
+}
+
+\tikzset{candle base style/.style={
+            draw,semicircle,rotate=183,
+            candle decoration,
+            minimum width=0.6cm, minimum height=0.2cm,
+            left color=Goldenrod1!40, right color=Goldenrod2,
+            candle shadow
+            },
+}
+
+\newcounter{candles}
+\setcounter{candles}{1}
+\tikzset{candle/.code={
+        \draw[candle decoration, left color=Gold1!20, right color=Goldenrod1, candle shadow]
+        (0,1) to[curve through={(-0.1,0.5)..(-0.2,0) .. (0.2,0) .. (0.1,0.5)}] (0,1);       
+        \draw[draw=none,candle decoration, fill=LemonChiffon1]
+        (0,0.45) to[curve through={(-0.05,0.25)..(-0.1,0) .. (0.1,0) .. (0.05,0.25)}] (0,0.45);
+        \draw[decorate, decoration=penciline](0,0.125)--(0,-0.25)node(candle\thecandles){};     
+        \node[stick candle=#1, candle shadow] (candlesupport\thecandles) at (candle\thecandles){}; 
+        \node[candle support style, below=-0.1cm of candlesupport\thecandles](basecandle\thecandles) {};
+        \node[candle base style, below=0.275cm of basecandle\thecandles](downbasecandle\thecandles){};
+        \stepcounter{candles}
+    }
+}
+
+\tikzset{candelabrum style/.style={
+            anchor=north,draw,trapezium, trapezium stretches=true, 
+            candle decoration,
+            minimum height=5cm, minimum width=0.9cm,
+            left color=Goldenrod1!40, right color=Goldenrod2,
+            candle shadow
+            },
+}
+
+% original code by Paul Gaborit:
+% tex.stackexchange.com/questions/72784/arrow-with-two-colors-with-tikz/#72793
+\tikzset{
+  double path/.style args={#1 colored by #2 and #3}{
+    -,line join=bevel,line cap=rect,
+    shorten >=0.04cm,
+    shorten <=0.04cm,
+    line width=#1,#2, % first path
+    postaction={draw,-,#3,line width=(#1)/1.5,
+                shorten <=(#1)/4,shorten >=2*(#1)/4}, % second path
+  }
+}
+
+\tikzset{candelabrum branch/.style={
+        double path=3pt colored by black!80!Goldenrod1 and Goldenrod1!60,bend #1,
+        candle decoration,
+    }
+}
+
+\begin{document}
+\begin{tikzpicture}[remember picture]
+\foreach \xpos in {0,1.2,2.4,3.6}{
+\begin{scope}[xshift=\xpos cm,yshift=-1cm]
+\node[candle=1cm]{};
+\end{scope}
+}
+\end{tikzpicture}
+\begin{tikzpicture}[remember picture]
+\node[candle]{};
+\end{tikzpicture}
+\begin{tikzpicture}[remember picture]
+\foreach \xpos in {0,1.2,2.4,3.6}{
+\begin{scope}[xshift=\xpos cm,yshift=-1cm]
+\node[candle=1cm]{};
+\end{scope}
+}
+\end{tikzpicture}
+% Candelabrum
+\begin{tikzpicture}[remember picture, overlay]
+\node[candelabrum style] (candelabrum) at (downbasecandle5.north){};
+%\node[candelabrum base] at (candelabrum.south){};
+\draw[left color=Goldenrod1!40, right color=Goldenrod2,candle decoration, candle shadow]
+($(candelabrum.bottom left corner)-(0.4,0.6)$) parabola[bend at end] (candelabrum.bottom left corner)--
+(candelabrum.bottom right corner) parabola ($(candelabrum.bottom right corner)+(0.4,-0.6)$)
+--($(candelabrum.bottom left corner)-(0.4,0.6)$);
+\draw[left color=Goldenrod1!40, right color=Goldenrod2,candle decoration, candle shadow]($(candelabrum.bottom left corner)-(0.4,0.6)$)-- ($(candelabrum.bottom right corner)+(0.4,-0.6)$)-- ($(candelabrum.bottom right corner)+(0.4,-0.9)$)--($(candelabrum.bottom left corner)-(0.4,0.9)$)--cycle;
+% left
+\path (downbasecandle1.north)edge[candelabrum branch=right](candelabrum.195);
+\path (downbasecandle2.north)edge[candelabrum branch=right](candelabrum.115);
+\path (downbasecandle3.north)edge[candelabrum branch=right](candelabrum.100);
+\path (downbasecandle4.north)edge[candelabrum branch=right](candelabrum.97);
+% right
+\path (downbasecandle6.north)edge[candelabrum branch=left](candelabrum.83);
+\path (downbasecandle7.north)edge[candelabrum branch=left](candelabrum.80);
+\path (downbasecandle8.north)edge[candelabrum branch=left](candelabrum.65);
+\path (downbasecandle9.north)edge[candelabrum branch=left](candelabrum.345);
+\end{tikzpicture}
+\end{document}
+
