@@ -1,0 +1,37 @@
+% Dynamic inverse-$\varGamma$-equivalent circuit for an induction machine
+% Author: Erno Pentzin (2013)
+\documentclass{article}
+\usepackage{tikz}
+%%%<
+\usepackage{verbatim}
+\usepackage[active,tightpage]{preview}
+\PreviewEnvironment{tikzpicture}
+\setlength\PreviewBorder{10pt}%
+%%%>
+\begin{comment}
+:Title: Dynamic inverse-gamma-equivalent circuit for an induction machine
+:Tags: Electrical engineering;circuitikz
+:Author: Erno Pentzin
+:Slug: induction-machine
+\end{comment} 
+\usepackage[europeanresistors,americaninductors]{circuitikz}
+\begin{document}
+
+\begin{circuitikz}[american voltages]
+\draw
+  % rotor circuit
+  (0,0) to [short, *-] (6,0)
+  to [V, l_=$\mathrm{j}{\omega}_m \underline{\psi}^s_R$] (6,2) % rotor emf
+  to [R, l_=$R_R$] (6,4) % rotor resistance
+  to [short, i_=$\underline{i}^s_R$] (5,4) % rotor current
+
+  % stator circuit
+  (0,0) to [open, v^>=$\underline{u}^s_s$] (0,4) % stator voltage
+  to [short, *- ,i=$\underline{i}^s_s$] (1,4) % stator current
+  to [R, l=$R_s$] (3,4) % stator resistance
+  to [L, l=$L_{\sigma}$] (5,4) % leakage inductance
+  to [short, i_=$\underline{i}^s_M$] (5,3) % magnetizing current
+  to [L, l_=$L_M$] (5,0); % magnetizing inductance
+\end{circuitikz}
+
+\end{document}
