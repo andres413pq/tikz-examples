@@ -22,114 +22,109 @@ The second picture draws a Penrose triangle, another similar
 optical illusion.
 \end{comment}	
 \begin{document}
-	\begin{center}
-	\begin{tikzpicture}[scale=4.5,line join=bevel]
+  \begin{center}
+    \begin{tikzpicture}[scale=4.5, line join=bevel]
 	
-		% \a and \b are two macros defining characteristic
-		% dimensions of the impossible brick.
-		\pgfmathsetmacro{\a}{0.18}
-		\pgfmathsetmacro{\b}{1.37}
+      % \a and \b are two macros defining characteristic
+      % dimensions of the impossible brick.
+      \pgfmathsetmacro{\a}{0.18}
+      \pgfmathsetmacro{\b}{1.37}
 
-		\tikzset{
-			brick_edges/.style={thick,black},
-			face_colourA/.style={fill=gray!50},
-			face_colourB/.style={fill=gray!25},
-			face_colourC/.style={fill=gray!90},
-		}
+      \tikzset{
+        brick_edges/.style  = {thick,black},
+        face_colourA/.style = {fill=gray!50},
+        face_colourB/.style = {fill=gray!25},
+        face_colourC/.style = {fill=gray!90},
+      }
 		
-		% Faces
-		\fill[face_colourA]
-  			  (0,0)			--
-			++(\b,0)		--
-			++(-\a,-\a)		--
-			++({-\b+2*\a},0)--
-			++(0,-{2*\a})	--
-			++(\b,0)		--
-			++(-\a,-\a)		--
-			++(-\b,0);		--
-			cycle;
-		\fill[face_colourB]
-  			  (0,0)			--
-			++(\a,\a)		--
-			++(\b,0)		--
-			++(0,-{4*\a})	--
-			++(-\b,0)		--
-			++(\a,\a)		--
-			++({\b-2*\a},0)	--
-			++(0,{2*\a})	--
-			cycle;
-		\fill[face_colourC]
-  			  (\b,0)		--
-			++(0,{-2*\a})	--
-			++(-\a,0)		--
-			++(0,\a)		--
-			cycle;
-		\fill[face_colourC]
-  			  (\a,-\a)		--
-			++(\a,0)		--
-			++(0,-\a)		--
-			++(-\a,-\a)		--
-			cycle;
-		% edges
-		\draw[
-			brick_edges,
-			]
-  			  (0,0)			--
-			++(\a,\a)		--
-			++(\b,0)		--
-			++(0,-{4*\a})	--
-			++(-\b,0)		--
-			++(0,{2*\a})	--
-			++({\b-2*\a},0)	--
-			++(0,-\a);
-		\draw[brick_edges]
-  			  ({\b+\a},{-3*\a})	--
-			++(-\a,-\a)			--
-			++(-\b,0)			--
-			++(0,{4*\a})		--
-			++(\b,0)			--
-			++(0,-{2*\a})		--
-			++({-\b+2*\a},0)	--
-			++(0,\a);
-		\draw[brick_edges]
-			(\b,0) -- ++(-\a,-\a);
-		\draw[brick_edges]
-			(\a,{-3*\a}) -- ++(\a,\a);
-	\end{tikzpicture}
-	
-	\vspace{1cm}
-	
-	\begin{tikzpicture}[scale=1,line join=bevel]
-	
-		% \a and \b are two macros defining characteristic
-		% dimensions of the Penrose triangle.		
-		\pgfmathsetmacro{\a}{2.5}
-		\pgfmathsetmacro{\b}{0.9}
+      % Faces
+      \fill[face_colourA]
+        (0,0)             --
+        ++(\b,0)          --
+        ++(-\a,-\a)       --
+        ++({-\b+2*\a},0)  --
+        ++(0,-{2*\a})     --
+        ++(\b,0)          --
+        ++(-\a,-\a)       --
+        ++(-\b,0);        --
+        cycle;
+      \fill[face_colourB]
+        (0,0)             --
+        ++(\a,\a)         --
+        ++(\b,0)          --
+        ++(0,-{4*\a})     --
+        ++(-\b,0)         --
+        ++(\a,\a)         --
+        ++({\b-2*\a},0)   --
+        ++(0,{2*\a})      --
+        cycle;
+      \fill[face_colourC]
+        (\b,0)            --
+        ++(0,{-2*\a})     --
+        ++(-\a,0)         --
+        ++(0,\a)          --
+        cycle;
+      \fill[face_colourC]
+        (\a,-\a)          --
+        ++(\a,0)          --
+        ++(0,-\a)         --
+        ++(-\a,-\a)       --
+        cycle;
+      % edges
+      \draw[brick_edges]
+        (0,0)             --
+        ++(\a,\a)         --
+        ++(\b,0)          --
+        ++(0,-{4*\a})     --
+        ++(-\b,0)         --
+        ++(0,{2*\a})      --
+        ++({\b-2*\a},0)   --
+        ++(0,-\a);
+      \draw[brick_edges]
+        ({\b+\a},{-3*\a}) --
+        ++(-\a,-\a)       --
+        ++(-\b,0)         --
+        ++(0,{4*\a})      --
+        ++(\b,0)          --
+        ++(0,-{2*\a})     --
+        ++({-\b+2*\a},0)  --
+        ++(0,\a);
+      \draw[brick_edges]
+        (\b,0) -- ++(-\a,-\a);
+      \draw[brick_edges]
+        (\a,{-3*\a}) -- ++(\a,\a);
+    \end{tikzpicture}
 
-		\tikzset{%
-  			apply style/.code={%
-    			\tikzset{#1}%
-  			},
-  			triangle_edges/.style={thick,draw=black}
-  		}
+    \vspace{1cm}
 
-		\foreach \theta/\facestyle in {%
-			0/{triangle_edges,fill=gray!50},
-			120/{triangle_edges,fill=gray!25},
-			240/{triangle_edges,fill=gray!90}%
-		}{
-			\begin{scope}[rotate=\theta]
-				\draw[apply style/.expand once=\facestyle]
-					  ({-sqrt(3)/2*\a},{-0.5*\a})					--
-					++(-\b,0)										--
-					  ({0.5*\b},{\a+3*sqrt(3)/2*\b}) 				-- % higher point	
-					  ({sqrt(3)/2*\a+2.5*\b},{-.5*\a-sqrt(3)/2*\b}) -- % rightmost point
-					++({-.5*\b},-{sqrt(3)/2*\b})					-- % lower point
-					  ({0.5*\b},{\a+sqrt(3)/2*\b})					--
-					cycle;
-			\end{scope}
-		}
-		
+	\begin{tikzpicture}[scale=1, line join=bevel]
+	
+    % \a and \b are two macros defining characteristic
+    % dimensions of the Penrose triangle.		
+    \pgfmathsetmacro{\a}{2.5}
+    \pgfmathsetmacro{\b}{0.9}
+
+    \tikzset{%
+      apply style/.code     = {\tikzset{#1}},
+      triangle_edges/.style = {thick,draw=black}
+    }
+
+    \foreach \theta/\facestyle in {%
+        0/{triangle_edges, fill = gray!50},
+      120/{triangle_edges, fill = gray!25},
+      240/{triangle_edges, fill = gray!90}%
+    }{
+      \begin{scope}[rotate=\theta]
+        \draw[apply style/.expand once=\facestyle]
+          ({-sqrt(3)/2*\a},{-0.5*\a})                     --
+          ++(-\b,0)                                       --
+            ({0.5*\b},{\a+3*sqrt(3)/2*\b})                -- % higher point	
+            ({sqrt(3)/2*\a+2.5*\b},{-.5*\a-sqrt(3)/2*\b}) -- % rightmost point
+          ++({-.5*\b},-{sqrt(3)/2*\b})                    -- % lower point
+            ({0.5*\b},{\a+sqrt(3)/2*\b})                  --
+          cycle;
+        \end{scope}
+      }	
 	\end{tikzpicture}
   \end{center}
 \end{document}
