@@ -30,74 +30,42 @@ optical illusion.
       \pgfmathsetmacro{\a}{0.18}
       \pgfmathsetmacro{\b}{1.37}
 
-      \tikzset{
-        brick_edges/.style  = {thick,black},
-        face_colourA/.style = {fill=gray!50},
-        face_colourB/.style = {fill=gray!25},
-        face_colourC/.style = {fill=gray!90},
+      \tikzset{%
+        apply style/.code={\tikzset{#1}},
+        brick_edges/.style={thick,draw=black},
+        face_colourA/.style={fill=gray!50},
+        face_colourB/.style={fill=gray!25},
+        face_colourC/.style={fill=gray!90},
       }
-		
-      % Faces
-      \fill[face_colourA]
-        (0,0)             --
-        ++(\b,0)          --
-        ++(-\a,-\a)       --
-        ++({-\b+2*\a},0)  --
-        ++(0,-{2*\a})     --
-        ++(\b,0)          --
-        ++(-\a,-\a)       --
-        ++(-\b,0);        --
-        cycle;
-      \fill[face_colourB]
-        (0,0)             --
-        ++(\a,\a)         --
-        ++(\b,0)          --
-        ++(0,-{4*\a})     --
-        ++(-\b,0)         --
-        ++(\a,\a)         --
-        ++({\b-2*\a},0)   --
-        ++(0,{2*\a})      --
-        cycle;
-      \fill[face_colourC]
-        (\b,0)            --
-        ++(0,{-2*\a})     --
-        ++(-\a,0)         --
-        ++(0,\a)          --
-        cycle;
-      \fill[face_colourC]
-        (\a,-\a)          --
-        ++(\a,0)          --
-        ++(0,-\a)         --
-        ++(-\a,-\a)       --
-        cycle;
-      % edges
-      \draw[brick_edges]
-        (0,0)             --
-        ++(\a,\a)         --
-        ++(\b,0)          --
-        ++(0,-{4*\a})     --
-        ++(-\b,0)         --
-        ++(0,{2*\a})      --
-        ++({\b-2*\a},0)   --
-        ++(0,-\a);
-      \draw[brick_edges]
-        ({\b+\a},{-3*\a}) --
-        ++(-\a,-\a)       --
-        ++(-\b,0)         --
-        ++(0,{4*\a})      --
-        ++(\b,0)          --
-        ++(0,-{2*\a})     --
-        ++({-\b+2*\a},0)  --
-        ++(0,\a);
-      \draw[brick_edges]
-        (\b,0) -- ++(-\a,-\a);
-      \draw[brick_edges]
-        (\a,{-3*\a}) -- ++(\a,\a);
+
+      \foreach \theta/\v/\facestyleone/\facestyletwo in {%
+        0/0/{brick_edges,face_colourA}/{brick_edges,face_colourC},
+        180/-\a/{brick_edges,face_colourB}/{brick_edges,face_colourC}
+      }{
+      \begin{scope}[rotate=\theta,shift={(\v,0)}]
+        \draw[apply style/.expand once=\facestyleone]  		
+          ({-.5*\b},{1.5*\a}) --
+          ++(\b,0)            --
+          ++(-\a,-\a)         --
+          ++({-\b+2*\a},0)    --
+          ++(0,-{2*\a})       --
+          ++(\b,0)            --
+          ++(-\a,-\a)         --
+          ++(-\b,0)           --
+          cycle;
+        \draw[apply style/.expand once=\facestyletwo] 
+          ({.5*\b},{1.5*\a})  --
+          ++(0,{-2*\a})       --
+          ++(-\a,0)           --
+          ++(0,\a)            --
+          cycle;
+        \end{scope}
+      }
     \end{tikzpicture}
 
     \vspace{1cm}
 
-	\begin{tikzpicture}[scale=1, line join=bevel]
+	  \begin{tikzpicture}[scale=1, line join=bevel]
 	
     % \a and \b are two macros defining characteristic
     % dimensions of the Penrose triangle.		
